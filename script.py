@@ -1,9 +1,9 @@
 import pandas as pd
 import re
 import random
+import os
+import openpyxl
 
-
-file_name = "2023_Kwara_P3B.xlsx"
 
 
 def get_sheets(file_name):
@@ -17,7 +17,7 @@ def get_sheets(file_name):
     """
     excel_file = pd.ExcelFile(file_name)
     list_sheets = excel_file.sheet_names
-    needed_sheets = [sheet for sheet in list_sheets if re.match(r'^[0-1]+', sheet) ]
+    needed_sheets = [sheet for sheet in list_sheets if re.match(r'^[0-9]+[.]?', sheet) ]
 
     return needed_sheets
 
@@ -90,3 +90,109 @@ def remove_blank_wards_rows(data_frame):
             data_frame=data_frame.drop(indx)
     data_frame = data_frame.reset_index(drop=True)
     return data_frame
+
+
+def drop_subtotal_rows(data_frame):
+    """
+        this function takes a cleaned p3b data cleaned
+        using the remo_unwanted_columns and remove_blank_wards_row
+        and remove the subtotal rows while taking the values of total 
+        population and total communities and add them to repective ward rows
+        it also adds a column for cumulative frequency
+        Input
+        Dataframe: Cleaned p3b data (pandas data frame)
+        Ouput
+        wards_df: a dataframe with list of wards and their respctive total
+                  communities, total population and cumulative frequency
+                  (pandas dataframe)
+    """
+    subtotal_df = data_frame
+    wards_df = data_frame
+    for indx in range(len(data_frame)):
+        if data_frame["Wards"][indx] == "sub total":
+            wards_df = wards_df.drop(indx)
+        else:
+            subtotal_df = subtotal_df.drop(indx)
+    wards_df = wards_df.reset_index(drop=True)
+    subtotal_df = subtotal_df.reset_index(drop=True)
+
+
+    for indx in range(len(wards_df)):
+        # wards_df["Wards"][indx]=subtotal_df["Wards"][indx]
+        total_com = subtotal_df["List of contiguous communities/ settlements"][indx]
+        population = subtotal_df["Population\n(2023)"][indx]
+        wards_df["List of contiguous communities/ settlements"][indx] = total_com
+        wards_df["Population\n(2023)"][indx] = population
+    wards_df = wards_df.sort_values(by='Population\n(2023)')
+    wards_df = wards_df.reset_index(drop=True)
+    wards_df["Cumulative frequency"] = wards_df['Population\n(2023)'].cumsum()
+    return wards_df
+
+
+def create_random_cluster(data_frame, clusters=8):
+    """
+        this function takes in dataframe created using the drop_subtotal_rows
+        its uses the cumulative frequency columns to create random clusters
+        a new data is created columns of Wards, Total communities, Population
+        cumulative frequency and cluster name
+        Input
+        data_frame: cleanded p3b data (pandas dataframe)
+        clusters: defaults to 8, how many clusters you wish to create (int)
+        Output:
+        final_dif: Dataframe with clusters (pandas dataframe)
+    """
+    sum_population = data_frame['Population\n(2023)'].sum()
+    population_interval = sum_population//clusters
+    start_random = random.choice(range(1000, 2000))
+    step_random = random.choice(range(100, 300))
+    start_population = random.choice(range(start_random, 20000, step_random))
+    pop_list = []
+    for indx in range(clusters):
+        pop_list.append(start_population)
+        start_population = start_population+population_interval
+        data = {"Wards": [], "Total communities": [], "Population": [],
+                "Cumulative frequency": [], "Clusters": []}
+    final_df = pd.DataFrame(data)
+    for i, population in enumerate(pop_list):
+        for indx in range(len(data_frame)):
+            if population <= data_frame["Cumulative frequency"][indx]:
+                ward = data_frame["Wards"][indx]
+                com = data_frame["List of contiguous communities/ settlements"][indx]
+                pop = data_frame["Population\n(2023)"][indx]
+                cum = data_frame["Cumulative frequency"][indx]
+                cluster = f"Cluster {i+1} ({population})"
+                data = {"Wards": [ward], "Total communities": [com],
+                        "Population": [pop], "Cumulative frequency": [cum],
+                        "Clusters": [cluster]}
+                new_row = pd.DataFrame(data)
+                final_df = pd.concat([final_df, new_row], ignore_index=True)
+                break
+            continue
+    return final_df
+
+
+def write_to_excel(data_frame, file_name, sheet_name):
+    """
+        this function writes a sheet to an existing workbook
+        if the workbook does not exist it creates the workbook
+        and write a sheet to it
+        Input:
+        data_frame: the pandas dataframe you want to write to a workbook
+                   (pandas dataframe)
+        file_name: name of the workbook you wish to write to (str)
+        sheet_name: name of sheet (str)
+    """
+    # create excel file using file name if its not in the directory
+    if not os.path.isfile(file_name):
+        wb = openpyxl.Workbook()  
+        wb.save(file_name)
+    # Open the workbook and create a writer object to write the DataFrame to the sheet
+    # work_book = openpyxl.load_workbook(file_name, data_only=True)
+    with pd.ExcelWriter(file_name, "openpyxl", mode="a", if_sheet_exists='replace') as writer:
+        # writer.book = work_book
+        data_frame.to_excel(writer, sheet_name, index=False)
+    # writer.close()
+    return "DONE"
+
+
+ 
