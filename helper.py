@@ -56,4 +56,5 @@ kwara_lga_map = {'Asa': 'Asa', 'Baruten': 'Baruten', 'Edu': 'Edu', 'Ekiti': 'Eki
             'Oyun': 'Oyun', 'Patigi': 'Pategi'}
 
 wards_shapefile ="Nigeria Wards/Nigeria_Wards.shp"
-set_extent_shapefile = "Nigeria_Settlement_Extents_Version_02\nga_stlext_grid3_v02.shp"
+set_extent_shapefile = "Nigeria_Settlement_Extents_Version_02/nga_stlext_grid3_v02.shp"
+lga_shapefile = "Nigeria_-_Local_Government_Area_Boundaries/Nigeria_-_Local_Government_Area_Boundaries.shp"
