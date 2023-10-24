@@ -4,7 +4,7 @@ from geo_script import *
 file_name = "2023_Kwara_P3B.xlsx"
 
 
-def main():
+def main(state):
     """
         this function 
     """
