@@ -93,3 +93,19 @@ def create_random_point(layer):
     point = (random_x, random_y)
     return point
 
+
+def geo_location(wards_layer,extent, state,lga,ward):
+    """
+        takes a ward and create a random point within the ward
+        Input:
+            wards_layer: GRID3 Nigeria wards layer (QgsVectorLayer)
+            extent: GRID3 Nigeria settlemetn extents layer (QgsVectorLayer)
+        Output:
+            location: x and y coordinates of the location (tuple)
+        
+    """
+    query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{kwara_lga_map[lga]}\'AND "wardname" = \'{kwara_wards_map[ward]}\''
+    ward_layer= crt_subset_lyr(wards_layer, query)
+    ward_extent  = clip_set_ext_layer(extent,ward_layer)
+    location= create_random_point(ward_extent)
+    return location  
