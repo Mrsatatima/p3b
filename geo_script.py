@@ -78,7 +78,6 @@ def create_random_point(layer):
     """
     layer = layer.getFeatures()
     extents = [extent for extent in layer if extent["bld_count"] != "1-50"]
-    print(extents)
     dct = {}
     for idx, extent in enumerate(extents):
         if extent["bld_count"] == "51-100":
@@ -87,13 +86,10 @@ def create_random_point(layer):
             dct[str(idx)] = 2
         else:
             dct[str(idx)] = 3
-    # print(dct)
-    # for extent in state_extent.getFeatures():
-    #     print(extent["bld_count"], extent.geometry())
     extent = extents[int(max(dct.values()))]
-    # print(extent["bld_count"])
     geom = extent.geometry() 
     random_x = random.uniform(geom.boundingBox().xMinimum(), geom.boundingBox().xMaximum())
     random_y = random.uniform(geom.boundingBox().yMinimum(), geom.boundingBox().yMaximum())
     point = (random_x, random_y)
     return point
+

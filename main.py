@@ -12,6 +12,7 @@ def main(state):
     # print(sheets,len(sheets))
     for sheet in sheets:
         # print(sheet)
+        lga = sheet.split('.')[1]
         demo_df = pd.read_excel(file_name, sheet_name=sheet)
         row_index = actual_header_row(demo_df)
         clean_data = remove_first_blank_column(file_name, row_index, sheet)
