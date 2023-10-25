@@ -1,9 +1,9 @@
 import pandas as pd
 import re
-import random
 import os
 import openpyxl
 
+from geo_script import *
 
 
 def get_sheets(file_name):
@@ -129,7 +129,7 @@ def drop_subtotal_rows(data_frame):
     return wards_df
 
 
-def create_random_cluster(data_frame, clusters=8):
+def create_random_cluster(data_frame, state, lga, clusters=8):
     """
         this function takes in dataframe created using the drop_subtotal_rows
         its uses the cumulative frequency columns to create random clusters
@@ -151,7 +151,7 @@ def create_random_cluster(data_frame, clusters=8):
         pop_list.append(start_population)
         start_population = start_population+population_interval
         data = {"Wards": [], "Total communities": [], "Population": [],
-                "Cumulative frequency": [], "Clusters": []}
+                "Cumulative frequency": [], "Clusters": [],"XY Coordinates":[]}
     final_df = pd.DataFrame(data)
     for i, population in enumerate(pop_list):
         for indx in range(len(data_frame)):
@@ -161,9 +161,11 @@ def create_random_cluster(data_frame, clusters=8):
                 pop = data_frame["Population\n(2023)"][indx]
                 cum = data_frame["Cumulative frequency"][indx]
                 cluster = f"Cluster {i+1} ({population})"
+                location = geo_location(wards_shapefile, set_extent_shapefile, state, lga, ward)
+                xy_coordinates = f'{location[0]}|{location[1]}'
                 data = {"Wards": [ward], "Total communities": [com],
                         "Population": [pop], "Cumulative frequency": [cum],
-                        "Clusters": [cluster]}
+                        "Clusters": [cluster],"XY Coordinates":[xy_coordinates] }
                 new_row = pd.DataFrame(data)
                 final_df = pd.concat([final_df, new_row], ignore_index=True)
                 break
