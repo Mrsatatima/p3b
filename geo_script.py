@@ -2,6 +2,7 @@ from qgis.core import(QgsFeature, QgsVectorLayer,QgsFeatureRequest,QgsFields,Qgs
 from processing.core.Processing import Processing
 import processing
 import random
+from processing.tools import dataobjects
 
 from helper import *
 
@@ -63,7 +64,9 @@ def clip_set_ext_layer(layer, clip_layer):
                   'OVERLAY': clip_layer,
                   'OUTPUT': 'TEMPORARY_OUTPUT',
                   }
-    clipped_layer = processing.run('native:clip', parameters)
+    context = dataobjects.createContext()
+    context.setInvalidGeometryCheck(QgsFeatureRequest.GeometryNoCheck)
+    clipped_layer = processing.run('native:clip', parameters, context=context)
     return clipped_layer["OUTPUT"]
 
 
@@ -76,17 +79,21 @@ def create_random_point(layer):
         Output:
         Point: The x and y coordinate of the point (tuple) 
     """
-    layer = layer.getFeatures()
-    extents = [extent for extent in layer if extent["bld_count"] != "1-50"]
+    extent_layer = layer.getFeatures()
+    extents = [extent for extent in extent_layer if extent["bld_count"] != "1-50"]
     dct = {}
     for idx, extent in enumerate(extents):
-        if extent["bld_count"] == "51-100":
+        if extent["bld_count"] == "51-100" and 1 not in dct.values():
             dct[str(idx)] = 1
-        elif extent["bld_count"] == "51-100":
+        elif extent["bld_count"] == "101-250" and 2 not in dct.values():
             dct[str(idx)] = 2
-        else:
+        elif extent["bld_count"] == "251-1000" and 3 not in dct.values():
             dct[str(idx)] = 3
-    extent = extents[int(max(dct.values()))]
+        elif extent["bld_count"] == "1001 and up" and 4 not in dct.values():
+            dct[str(idx)] = 4
+        else:
+            continue
+    extent = extents[int(max(dct, key=dct.get))]
     geom = extent.geometry() 
     random_x = random.uniform(geom.boundingBox().xMinimum(), geom.boundingBox().xMaximum())
     random_y = random.uniform(geom.boundingBox().yMinimum(), geom.boundingBox().yMaximum())
@@ -105,7 +112,7 @@ def geo_location(wards_layer, extent, state, lga, ward):
     """
     wards_layer = QgsVectorLayer(wards_layer, "wards", "ogr")
     extent = QgsVectorLayer(extent, "set_extent", "ogr")
-    query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{kwara_lga_map[lga]}\'AND "wardname" = \'{kwara_wards_map[ward]}\''
+    query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{kwara_lga_map[lga.strip()]}\'AND "wardname" = \'{kwara_wards_map[ward.strip()]}\''
     ward_layer = crt_subset_lyr(wards_layer, query)
     ward_extent = clip_set_ext_layer(extent, ward_layer)
     location = create_random_point(ward_extent)
