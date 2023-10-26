@@ -92,19 +92,38 @@ def remove_blank_wards_rows(data_frame):
     return data_frame
 
 
-def drop_subtotal_rows(data_frame):
+def remove_unsecured_wards(data_frame, list_wards):
+    """
+        this function removes wards rows of wards with security
+        challenge
+        Input:
+            data_frame: dataframe to be formated (pandas dataframe)
+            list_wards: list of wards with security challenge (list)
+        Output:
+        data_frame: cleanded version of the input (pandas dataframe)
+    """
+    for indx in range(len(data_frame)):
+        if str(data_frame["Wards"][indx]) in list_wards:
+            data_frame = data_frame.drop(indx)
+    data_frame = data_frame.reset_index(drop=True)
+    return data_frame
+
+
+def drop_subtotal_rows(data_frame, ward_list):
     """
         this function takes a cleaned p3b data cleaned
         using the remo_unwanted_columns and remove_blank_wards_row
         and remove the subtotal rows while taking the values of total 
-        population and total communities and add them to repective ward rows
+        population and total communities and add them to repective ward rows.
+        The fucntion also removes wards that are security challenged
         it also adds a column for cumulative frequency
-        Input
-        Dataframe: Cleaned p3b data (pandas data frame)
-        Ouput
-        wards_df: a dataframe with list of wards and their respctive total
-                  communities, total population and cumulative frequency
-                  (pandas dataframe)
+        Input:
+            dataframe: Cleaned p3b data (pandas data frame)
+            ward_list: list of wards with security challenge (list)
+        Ouput:
+            new_wards_df: a dataframe with list of wards and their respctive total
+                    communities, total population and cumulative frequency
+                    (pandas dataframe)
     """
     subtotal_df = data_frame
     wards_df = data_frame
@@ -116,7 +135,6 @@ def drop_subtotal_rows(data_frame):
     wards_df = wards_df.reset_index(drop=True)
     subtotal_df = subtotal_df.reset_index(drop=True)
 
-
     for indx in range(len(wards_df)):
         # wards_df["Wards"][indx]=subtotal_df["Wards"][indx]
         total_com = subtotal_df["List of contiguous communities/ settlements"][indx]
@@ -125,8 +143,9 @@ def drop_subtotal_rows(data_frame):
         wards_df["Population\n(2023)"][indx] = population
     wards_df = wards_df.sort_values(by='Population\n(2023)')
     wards_df = wards_df.reset_index(drop=True)
-    wards_df["Cumulative frequency"] = wards_df['Population\n(2023)'].cumsum()
-    return wards_df
+    new_wards_df = remove_unsecured_wards(wards_df, ward_list)
+    new_wards_df["Cumulative frequency"] = wards_df['Population\n(2023)'].cumsum()
+    return new_wards_df
 
 
 def create_random_cluster(data_frame, state, lga, clusters=8):
