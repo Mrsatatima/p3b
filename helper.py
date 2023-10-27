@@ -55,7 +55,7 @@ kwara_lga_map = {'Asa': 'Asa', 'Baruten': 'Baruten', 'Edu': 'Edu', 'Ekiti': 'Eki
             'Moro': 'Moro', 'Offa': 'Offa', 'Oke Ero': 'Oke Ero', 
             'Oyun': 'Oyun', 'Patigi': 'Pategi'}
 
-kwara_security_challenged ={"Baruten":["Yashikira",'Gure /Giwasorio'],"Edu":["Lafiahi II", "Lafiagi III"],
+kwara_security_challenged ={"Baruten":["Yashikira",'Gure /Giwasorio'],"Edu":["Lafiagi II", "Lafiagi III"],
                             "Oke Ero":["Idofin Odo - Ashe", "Idofin Igbona II","Idofin Igbona I"],
                             "Isin":["Olla","Isanlu I","Isanlu II","Owu"], 
                             "Irepodun":["Ajase I","Ajase II","Arandun","Oro I","Esie/Ijan"],

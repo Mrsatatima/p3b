@@ -3,6 +3,7 @@ import re
 import os
 import openpyxl
 
+
 from geo_script import *
 
 
@@ -144,7 +145,7 @@ def drop_subtotal_rows(data_frame, ward_list):
     wards_df = wards_df.sort_values(by='Population\n(2023)')
     wards_df = wards_df.reset_index(drop=True)
     new_wards_df = remove_unsecured_wards(wards_df, ward_list)
-    new_wards_df["Cumulative frequency"] = wards_df['Population\n(2023)'].cumsum()
+    new_wards_df["Cumulative frequency"] = new_wards_df['Population\n(2023)'].cumsum()
     return new_wards_df
 
 
@@ -164,7 +165,8 @@ def create_random_cluster(data_frame, state, lga, clusters=8):
     population_interval = sum_population//clusters
     start_random = random.choice(range(1000, 2000))
     step_random = random.choice(range(100, 300))
-    start_population = random.choice(range(start_random, 20000, step_random))
+    start_range = random.choice(range(abs(int(data_frame["Cumulative frequency"][0])-1000),(int(data_frame["Cumulative frequency"][0])+1000),500))
+    start_population = random.choice(range(start_random, start_range, step_random))
     pop_list = []
     for indx in range(clusters):
         pop_list.append(start_population)
@@ -172,6 +174,7 @@ def create_random_cluster(data_frame, state, lga, clusters=8):
         data = {"Wards": [], "Total communities": [], "Population": [],
                 "Cumulative frequency": [], "Clusters": [],"XY Coordinates":[]}
     final_df = pd.DataFrame(data)
+    
     for i, population in enumerate(pop_list):
         for indx in range(len(data_frame)):
             if population <= data_frame["Cumulative frequency"][indx]:
