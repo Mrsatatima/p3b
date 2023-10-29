@@ -43,7 +43,7 @@ kwara_wards_map ={'Abati Alara': 'Abati Alara', 'Aboto/Odo-Ode': 'Aboto / Odoode
             'Patigi I': 'Pategi 1', 'Patigi II':'Pategi 2', 'Patigi III': 'Pategi 3',  'Patigi IV': 'Pategi 4', 
             'Shao': 'Shao', 'Share I': 'Share 1', 'Share II': 'Share 2', 'Share III': 'Share 3', 'Share IV': 'Share 4',
             'Share V': 'Share 5', 'Shawo C': 'Shawo Central', 'Shawo SE': 'Shawo South East',
-            'Shawo SW': 'Shawo South West', 'Sinawu/Tumbiya': 'Sinawu / Tumbiya', 'Sosoki/Yowere': 'Sosoki / Yowere',
+            'Shawo SW': 'Shawo South West', 'Sinawu/Tumbuyam': 'Sinawu / Tumbiya', 'Sosoki/Yowere': 'Sosoki / Yowere',
             'Tsaragi I': 'Tsaragi 1', 'Tsaragi II': 'Tsaragi 2', 'Tsaragi III': 'Tsaragi 3', 'Shonga I': 'Tsonga 1', 
             'Shonga II': 'Tsonga 2', 'Shonga III': 'Tsonga 3', 'Ubandawaki': 'Ubandawaki', 
             'Wara/Osin/Egbejila': 'Wara / Osin / Egbejila', 'Wojibe': 'Wojibe', 'Womi Ayaki': 'Womi Ayaki', 

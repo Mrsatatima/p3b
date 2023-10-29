@@ -1,4 +1,4 @@
-from qgis.core import(QgsFeature, QgsVectorLayer,QgsFeatureRequest,QgsFields,QgsApplication )
+from qgis.core import(QgsFeature, QgsVectorLayer,QgsFeatureRequest,QgsFields,QgsApplication,QgsGeometry )
 from processing.core.Processing import Processing
 import processing
 import random
@@ -94,10 +94,10 @@ def create_random_point(layer):
         else:
             continue
     extent = extents[int(max(dct, key=dct.get))]
-    geom = extent.geometry() 
-    random_x = random.uniform(geom.boundingBox().xMinimum(), geom.boundingBox().xMaximum())
-    random_y = random.uniform(geom.boundingBox().yMinimum(), geom.boundingBox().yMaximum())
-    point = (random_x, random_y)
+    extent_center = extent.geometry().centroid().asPoint()
+    x = extent_center.x()
+    y = extent_center.y()
+    point = (x, y)
     return point
 
 
