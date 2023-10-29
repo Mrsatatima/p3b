@@ -185,6 +185,7 @@ def create_random_cluster(data_frame, state, lga, clusters=8):
                 cum = data_frame["Cumulative frequency"][indx]
                 cluster = f"Cluster {i+1} ({population})"
                 location = geo_location(wards_shapefile, set_extent_shapefile, state, lga, ward)
+                xy_coordinates = f'{location[0]}|{location[1]}'
                 url = f"https://www.google.com/maps/dir/'8.456104,4.544522'/{location[1]},{location[0]}"
                 data = {"Wards": [ward], "Total communities": [com],
                         "Population": [pop], "Cumulative frequency": [cum],
