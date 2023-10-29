@@ -5,7 +5,14 @@ file_name = "2023_Kwara_P3B.xlsx"
 
 def main(state):
     """
-        this function 
+        this function runs the whole process, it calls functions
+        from script.py and geo_script.py it cleans the p3b create the cluster
+        add google map direction link to each cluster. it then writes to an 
+        excel file
+        Input:
+            state: Name of state you want to clean
+        Output:
+            none
     """
     sheets = get_sheets(file_name)
     # print(sheets,len(sheets))
