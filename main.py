@@ -1,7 +1,7 @@
 from script import *
 
-file_name = "2023_Kwara_P3B.xlsx"
-
+file_name = "2021_Ogun_P3B.xlsx"
+needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2021)"]
 
 def main(state):
     """
@@ -23,7 +23,7 @@ def main(state):
         demo_df = pd.read_excel(file_name, sheet_name=sheet)
         row_index = actual_header_row(demo_df)
         clean_data = remove_first_blank_column(file_name, row_index, sheet)
-        new_data = remove_unwanted_columns(clean_data, ["Wards", "List of contiguous communities/ settlements", "Population\n(2023)"])
+        new_data = remove_unwanted_columns(clean_data, needed_columns)
         base_data = remove_blank_wards_rows(new_data)
         ward_list = []
         if lga in kwara_security_challenged:
@@ -34,4 +34,4 @@ def main(state):
 
 
 if __name__ == "__main__":
-    main("Kwara")
+    main("Ogun")

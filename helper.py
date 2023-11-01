@@ -55,6 +55,72 @@ kwara_lga_map = {'Asa': 'Asa', 'Baruten': 'Baruten', 'Edu': 'Edu', 'Ekiti': 'Eki
             'Moro': 'Moro', 'Offa': 'Offa', 'Oke Ero': 'Oke Ero', 
             'Oyun': 'Oyun', 'Patigi': 'Pategi'}
 
+Ogun_lga_map = {'abeokuta north': 'abeokuta north', 'abeokuta south': 'abeokuta south',
+                 'ado-odo ota': 'ado odo/ota', 'ewekoro': 'ewekoro', 'ifo': 'ifo', 
+                 'ijebu east': 'ijebu east', 'ijebu north-east': 'ijebu north east',
+                 'ijebu north': 'ijebu north',  'ijebu ode': 'ijebu ode', 
+                 'ikenne': 'ikenne', 'imeko afon': 'imeko afon', 'ipokia': 'ipokia', 
+                 'obafemi owode': 'obafemi owode', 'odeda': 'odeda', 'odogbolu': 'odogbolu', 
+                 'ogun waterside': 'ogun waterside', 'remo north': 'remo north', 'sagamu': 'shagamu', 
+                 'yewa north': 'yewa north', 'yewa south': 'yewa south'}
+
+ogun_ward_map = {'iberekodo 1': 'iberekodo 1', 'iberekodo 2': 'iberekodo 2', 'iberekodo 3': 'iberekodo 3',
+                'iberekodo 4': 'iberekodo 4', 'iberekodo 5': 'iberekodo 5', 'idiya': 'idiya', 
+                'ikereku 1': 'ikereku 1', 'ikereku 2': 'ikereku 2', 'imala': 'imala', 'olorunda': 'olorunda',
+                'sabo 1': 'sabo 1', 'sabo 2': 'sabo 2', 'totoro  4': 'totoro 4',   'totoro 1': 'totoro 1', 
+                'totoro 2': 'totoro 2',  'totoro 3':'totoro 3','ake 1': 'ake 1', 'ake 2': 'ake 2', 
+                'ake 3/abule oloni': 'ake 3', 'ibara 1': 'ibara 1',  'ibara 2': 'ibara 2', 
+                'igbore agooba':'igbore / ago oba',   'ijaye':'ijaiye', 'ijeun titun': 'ijeun titun / ago-egun / ijesa',
+                'imo/kuto':'kuto / imo / isabo',  'isale ijeun/iporo sodeke':'iporo / sodeke / sale-ijeun 1',  'itoko': 'itoko',
+                'keesi emere':'emere', 'kemta agelende': 'kemta', 'oke ijemo':'ijemo', 'oke ijeun': 'oke ijeun', 
+                'ado 2':'ado 2',  'ado1':'ado 1',  'agbara': 'agbara', 'alapoti': 'alapoti', 'atan': 'atan', 
+                'ejila': 'ejila awori', 'ere': 'ere', 'igbesa': 'igbesa', 'ijoko': 'ijoko', 'iju': 'iju', 'ilogbo': 'ilogbo ward', 
+                'ketu': 'ketu', 'ota 1': 'ota 1', 'ota 2': 'ota 2', 'ota 3': 'ota 3', 'sango': 'sango', 'abalabi': 'abalabi', 
+                'arigbajo': 'arigbajo', 'asa/yobo': 'asayobo', 'elere/onigbedu': 'elere', 'itori': 'itori', 'mosan': 'mosan', 
+                'obada oko': 'obada', 'owowo': 'owowo', 'papalanto': 'papa', 'wasimi': 'wasimi', 'agbado': 'agbado', 
+                'agosi':'ifo 3', 'ajuwon/akute':'akute / ajuwon',  'ibogun': 'ibogun', 'ikorita/okenla': 'ifo 1', 
+                'ilepa/coker': 'coker / ilepa', 'ojodu-isheri':'ojodu / isheri', 'oke aro/baragun': 'opeilu / ibaragun',
+                'olose': 'ifo 2', 'oyero/ososun': 'ososun', 'sunren': 'sunren', 
+                'ajebandele': 'ajebandele', 'ife 1': 'ife 1', 'ife 2': 'ife 2', 'ikija': 'ikija', 'imobi 1': 'imobi 1', 
+                'imobi 2': 'imobi 2', 'imushin 1': 'imushin 1', 'imushin 2': 'imushin 2', 'itele': 'itele', 'ogbere': 'ogbere', 
+                'owu': 'owu', 'igbeba': 'igbeba / erunwon', 'igede': 'igede', 'ilese': 'ilese', 'imewuro': 'imewuro', 
+                'isoyin': 'isoyin', 'iworo': 'iworo / oju ona', 'oderegbe':'odosenlu',  'ogbogbo':'ogbogbo',  
+                 'sembora':'odosenbora', 'ago iwoye 1': 'ago iwoye 1', 'ago iwoye 2': 'ago iwoye 2', 
+                'akogelete': 'ako gelete', 'atikori': 'atikori', 'mamu': 'mamu', 'ojowo/japara': 'obada', 
+                'oke-agbo': 'ojowo', 'oke-sopen/obada': 'oke agbo', 'omen': 'omen', 'oru/awa/ilaporu': 'oru / awa',
+                'osun': 'osun', 'ijada/imepe': 'ijada / imepe 2', 'ijasi/idepo': 'ijasi / idepo', 
+                'imupa/iyanro': 'imupa / iyanro / ijade / imepe 1', 'isiwo': 'isiwo', 'isoku/ososa': 'isoku / ososa', 
+                'itamapako': 'itamapako', 'itantebu/ita-ogbin': 'itantebo / itaogbin', 'odo-egbo': 'odo-egbo / oliworo', 
+                'odo-esa':'odo esa', 'porogun 1': 'porogun 1', 'porogun 2': 'porogun 2', 'ikenne 1': 'ikenne 1', 
+                'ikenne 2': 'ikenne 2', 'ilisan 1': 'ilisan 1', 'ilisan 2': 'ilisan 2', 'iperu 1/iregun': 'iperu 1', 
+                'iperu 2/imobido': 'iperu 2', 'iperu 3': 'iperu 3', 'irolu': 'irolu', 'ogere 1': 'ogere 1', 'ogere 2': 'ogere 2', 
+                'afon': 'afon', 'agberiodo': 'agboriodo', 'agborogbomo': 'agborogbomo', 'atapele': 'atapele', 'idofa': 'idofa',
+                'ilara': 'ilara', 'imeko': 'imeko', 'iwoye': 'iwoye', 'oke-agbede': 'matale', 'owode': 'owode',
+                'agada': 'agada', 'agosasa': 'agosasa', 'ajegunle': 'ajegunle', 'idiroko': 'idiiroko', 'ifoyintedo': 'ifonyintedo', 
+                'ihunbo/ilase': 'ihunbo ilashe', 'ijofin': 'ijofin', 'ipokia i': 'ipokia 1', 'ipokia ii': 'ipokia 2', 
+                'maun 1': 'mahun 1', 'maun ii': 'mahun 2', 'tube': 'tube', 'ajebo': 'ajebo', 'ajura': 'ajura', 
+                'alapako': 'alapako', 'egbeda': 'egbeda', 'kajola':'kajola',  'mokoloki':'molokiki',
+                'moloko asipa':'maloko asipa',  'oba': 'oba', 'obafemi':'obafemi', 'ofada':'mowe', 'onidundu':'ibafo',
+                'owode':'magboro', 'alabata': 'alabata', 'alagbagba': 'alagbagba', 'ilugun': 'ilugun', 'itesi': 'itesi', 
+                'obantoko': 'obantoto', 'obete': 'obete', 'odeda': 'odeda', 'olodo': 'olodo', 'opeji': 'opebi', 
+                'osiele': 'osiele', 'aiyepe eyinwa': 'itaepo', 'ala igbile':'igbile',  'ibefun': 'ibefun',  'ibido/ikise': 'ikise', 
+                'idowa':'idowa',  'ilado/akio':'ilado', 'imodi': 'imodi',  'imosan': 'imosan', 'moraika-itaepo': 'moraika',
+                 'odogbolu 1': 'odogbolu 1', 'odogbolu 2': 'odugbolu 2', 'ogbo': 'ogbo', 'okun owa': 'okun owa', 'omu': 'omu', 'ososa': 'ososa',
+                 'abigi': 'abigi', 'ayede/lomiro': 'ayede', 'ayila': 'ayila', 'efire': 'efire', 'ibiade': 'ibiade', 'ilushin': 'ilushin', 
+                 'iwopin':'iwopin 1', 'makun irokun': 'irokun', 'ode omi':'ode-omi',  'oni': 'iwopin 2', 'akaka': 'akaka', 'ilara': 'ilara', 
+                 'ipara': 'ipara', 'isara 1': 'isara 1', 'isara 2': 'isara 2', 'isara 3': 'isara 3', 'iyankan/magbon': 'iyankan / imagbon', 
+                 'ode 1': 'ode 1', 'ode 2': 'ode 2', 'orile oko': 'orile oko','agbowa/ibido': 'agbowa','soyindo':'soyindo',
+                'ajaka':'ajara',
+                 'ayegbami':'ayegbami',  'ijagba':'ijagba',  'isote': 'isote', 'itunsokun':'itunsoku',  
+                 'latawa':'latawa',  'odelemo':'odelemo',  'ogijo': 'ogijo', 'ojumele':'ojumele',  'sabo agura': 'agura / sabo 2', 
+                 'simawa':'simawa', 'sabo gra':'gra sabo', 'batoro /ado':'batoro /ado',
+                 'ayetoro 1(idofoi)':'idofoi',   'ayetoro 2(isa ope)': 'ayetoro 2', 'ayetoro 3(ibile)':'ayetoro 1',  
+                 'ebute':'ebute',  'eggua':'eggua', 'igbogila': 'igbogila / ibese', 'ijoun': 'ijoun', 'imasai': 'imasayi', 
+                 'joga': 'joga / iboro', 'ohunbe': 'ohunbe', 'sunwa': 'sunwa', 'ajilete': 'ajilete', 'idogo': 'idogo', 
+                 'ilaro 1': 'ilaro 1', 'ilaro 2': 'ilaro 2', 'ilaro 3': 'ilaro 3', 'ilobi/erinja': 'ilobi / erinja', 
+                 'iwoye': 'iwoye', 'oke-odan': 'oke odan', 'owode 1': 'owode 1', 'owode 2': 'owode 2'}
+ 
+
 kwara_security_challenged ={"Baruten":["Yashikira",'Gure /Giwasorio'],"Edu":["Lafiagi II", "Lafiagi III"],
                             "Oke Ero":["Idofin Odo - Ashe", "Idofin Igbona II","Idofin Igbona I"],
                             "Isin":["Olla","Isanlu I","Isanlu II","Owu"], 
@@ -63,6 +129,8 @@ kwara_security_challenged ={"Baruten":["Yashikira",'Gure /Giwasorio'],"Edu":["La
                             "Oyun":["Ahogbada","Igbonna","Ikotun","Ojoku","BHC ILEMONA"],
                             "Moro":["Babadudu","Bode Saadu","Ejidongari","Jehunkunu","Megida","Shao"]
                             }
+
+
 wards_shapefile ="Nigeria Wards/Nigeria_Wards.shp"
 set_extent_shapefile = "Nigeria_Settlement_Extents_Version_02/nga_stlext_grid3_v02.shp"
 lga_shapefile = "Nigeria_-_Local_Government_Area_Boundaries/Nigeria_-_Local_Government_Area_Boundaries.shp"
