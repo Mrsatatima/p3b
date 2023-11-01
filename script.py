@@ -59,7 +59,6 @@ def remove_first_blank_column(file, row_index, sheet):
     df.columns = headers
     df = df.drop(0)
     df = df.reset_index(drop=True)
-    print (df)
     return df
 
 
