@@ -77,7 +77,7 @@ def remove_unwanted_columns(data_frame, columns):
     needed_column_data_frame = data_frame[columns]
     new_column_names = {columns[0]: "Wards", columns[1]: "Settlements",
                         columns[2]: "Population"}
-    new_data_frame = needed_column_data_frame
+    new_data_frame = needed_column_data_frame.copy()
     new_data_frame.rename(columns=new_column_names, inplace=True)
     return new_data_frame
 
