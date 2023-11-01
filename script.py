@@ -19,6 +19,7 @@ def get_sheets(file_name):
     excel_file = pd.ExcelFile(file_name)
     list_sheets = excel_file.sheet_names
     needed_sheets = [sheet for sheet in list_sheets if re.match(r'^[0-9]+[.]?', sheet) ]
+    excel_file.close()
 
     return needed_sheets
 
