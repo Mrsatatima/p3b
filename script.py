@@ -58,7 +58,7 @@ def remove_first_blank_column(file, row_index, sheet):
     df.columns = headers
     df = df.drop(0)
     df = df.reset_index(drop=True)
-    # print (df)
+    print (df)
     return df
 
 
@@ -74,7 +74,11 @@ def remove_unwanted_columns(data_frame, columns):
         new_data_frame: A formatted dataframe with only columns of interest
                         (pandas dataframe)
     """
-    new_data_frame = data_frame[columns]
+    needed_column_data_frame = data_frame[columns]
+    new_column_names = {columns[0]: "Wards", columns[1]: "Settlements",
+                        columns[2]: "Population"}
+    new_data_frame = needed_column_data_frame
+    new_data_frame.rename(columns=new_column_names, inplace=True)
     return new_data_frame
 
 
@@ -138,18 +142,18 @@ def drop_subtotal_rows(data_frame, ward_list):
 
     for indx in range(len(wards_df)):
         # wards_df["Wards"][indx]=subtotal_df["Wards"][indx]
-        total_com = subtotal_df["List of contiguous communities/ settlements"][indx]
-        population = subtotal_df["Population\n(2023)"][indx]
-        wards_df["List of contiguous communities/ settlements"][indx] = total_com
-        wards_df["Population\n(2023)"][indx] = population
-    wards_df = wards_df.sort_values(by='Population\n(2023)')
+        total_com = subtotal_df["Settlements"][indx]
+        population = subtotal_df["Population"][indx]
+        wards_df["Settlements"][indx] = total_com
+        wards_df["Population"][indx] = population
+    wards_df = wards_df.sort_values(by='Population')
     wards_df = wards_df.reset_index(drop=True)
     new_wards_df = remove_unsecured_wards(wards_df, ward_list)
-    new_wards_df["Cumulative frequency"] = new_wards_df['Population\n(2023)'].cumsum()
+    new_wards_df["Cumulative frequency"] = new_wards_df['Population'].cumsum()
     return new_wards_df
 
 
-def create_random_cluster(data_frame, state, lga, clusters=8):
+def create_random_cluster(data_frame, state, lga, lga_dct, ward_dct, clusters = 8):
     """
         this function takes in dataframe created using the drop_subtotal_rows
         its uses the cumulative frequency columns to create random clusters
@@ -161,7 +165,7 @@ def create_random_cluster(data_frame, state, lga, clusters=8):
         Output:
         final_dif: Dataframe with clusters (pandas dataframe)
     """
-    sum_population = data_frame['Population\n(2023)'].sum()
+    sum_population = data_frame['Population'].sum()
     population_interval = sum_population//clusters
     start_random = random.choice(range(1000, 2000))
     step_random = random.choice(range(100, 300))
@@ -180,11 +184,11 @@ def create_random_cluster(data_frame, state, lga, clusters=8):
         for indx in range(len(data_frame)):
             if population <= data_frame["Cumulative frequency"][indx]:
                 ward = data_frame["Wards"][indx]
-                com = data_frame["List of contiguous communities/ settlements"][indx]
-                pop = data_frame["Population\n(2023)"][indx]
+                com = data_frame["Settlements"][indx]
+                pop = data_frame["Population"][indx]
                 cum = data_frame["Cumulative frequency"][indx]
                 cluster = f"Cluster {i+1} ({population})"
-                location = geo_location(wards_shapefile, set_extent_shapefile, state, lga, ward)
+                location = geo_location(wards_shapefile, set_extent_shapefile, state, lga, ward,lga_dct,ward_dct)
                 xy_coordinates = f'{location[0]}|{location[1]}'
                 url = f"https://www.google.com/maps/dir/'8.456104,4.544522'/{location[1]},{location[0]}"
                 data = {"Wards": [ward], "Total communities": [com],

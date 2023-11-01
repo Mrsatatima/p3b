@@ -2,6 +2,9 @@ from script import *
 
 file_name = "2021_Ogun_P3B.xlsx"
 needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2021)"]
+lga_dct = Ogun_lga_map
+ward_dct = ogun_ward_map
+
 
 def main(state):
     """
@@ -29,7 +32,7 @@ def main(state):
         if lga in kwara_security_challenged:
             ward_list = kwara_security_challenged[lga]
         wards_df = drop_subtotal_rows(base_data, ward_list)
-        final_df = create_random_cluster(wards_df, state, lga)
+        final_df = create_random_cluster(wards_df, state, lga, lga_dct, ward_dct)
         write_to_excel(final_df, f"{state}_cluster.xlsx", sheet)
 
 

@@ -101,7 +101,7 @@ def create_random_point(layer):
     return point
 
 
-def geo_location(wards_layer, extent, state, lga, ward):
+def geo_location(wards_layer, extent, state, lga, ward, lga_dct, ward_dct):
     """
         takes a ward and create a random point within the ward
         Input:
@@ -112,7 +112,7 @@ def geo_location(wards_layer, extent, state, lga, ward):
     """
     wards_layer = QgsVectorLayer(wards_layer, "wards", "ogr")
     extent = QgsVectorLayer(extent, "set_extent", "ogr")
-    query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{kwara_lga_map[lga.strip()]}\'AND "wardname" = \'{kwara_wards_map[ward.strip()]}\''
+    query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{lga_dct[lga.strip().lower()].title()}\'AND "wardname" = \'{ward_dct[ward.strip().lower()].title()}\''
     ward_layer = crt_subset_lyr(wards_layer, query)
     ward_extent = clip_set_ext_layer(extent, ward_layer)
     location = create_random_point(ward_extent)
