@@ -47,6 +47,7 @@ def crt_subset_lyr(layer, query):
         memory_layer.dataProvider().addFeatures([outFeat])
         memory_layer.updateExtents()
     memory_layer.commitChanges()
+    print(len(list(memory_layer.getFeatures())))
     return memory_layer
 
 
@@ -67,6 +68,7 @@ def clip_set_ext_layer(layer, clip_layer):
     context = dataobjects.createContext()
     context.setInvalidGeometryCheck(QgsFeatureRequest.GeometryNoCheck)
     clipped_layer = processing.run('native:clip', parameters, context=context)
+
     return clipped_layer["OUTPUT"]
 
 
@@ -112,7 +114,9 @@ def geo_location(wards_layer, extent, state, lga, ward, lga_dct, ward_dct):
     """
     wards_layer = QgsVectorLayer(wards_layer, "wards", "ogr")
     extent = QgsVectorLayer(extent, "set_extent", "ogr")
-    query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{lga_dct[lga.strip().lower()].title()}\'AND "wardname" = \'{ward_dct[ward.strip().lower()].title()}\''
+    # print(ward_dct[ward.strip().lower()])
+
+    query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{lga_dct[lga.strip().lower()].title()}\'AND "wardname" = \'{ward_dct[lga.strip().lower()][ward.strip().lower()].title()}\''
     ward_layer = crt_subset_lyr(wards_layer, query)
     ward_extent = clip_set_ext_layer(extent, ward_layer)
     location = create_random_point(ward_extent)
