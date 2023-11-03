@@ -58,7 +58,7 @@ kwara_lga_map = {'asa': 'asa', 'baruten': 'baruten', 'edu': 'edu', 'ekiti': 'eki
                  'irepodun': 'irepodun', 'isin': 'isin', 'kaiama': 'kaiama', 'moro': 'moro', 'offa': 'offa', 
                  'oke ero': 'oke ero', 'oyun': 'oyun', 'patigi': 'pategi'}
 
-Ogun_lga_map = {'abeokuta north': 'abeokuta north', 'abeokuta south': 'abeokuta south',
+ogun_lga_map = {'abeokuta north': 'abeokuta north', 'abeokuta south': 'abeokuta south',
                  'ado-odo ota': 'ado odo/ota', 'ewekoro': 'ewekoro', 'ifo': 'ifo', 
                  'ijebu east': 'ijebu east', 'ijebu north-east': 'ijebu north east',
                  'ijebu north': 'ijebu north',  'ijebu ode': 'ijebu ode', 
@@ -67,7 +67,7 @@ Ogun_lga_map = {'abeokuta north': 'abeokuta north', 'abeokuta south': 'abeokuta 
                  'ogun waterside': 'ogun waterside', 'remo north': 'remo north', 'sagamu': 'shagamu', 
                  'yewa north': 'yewa north', 'yewa south': 'yewa south'}
 
-ogun_ward_map = {'abeokuta north': {'totoro 3': 'totoro 3', 'iberekodo 3': 'iberekodo 3', 
+ogun_wards_map = {'abeokuta north': {'totoro 3': 'totoro 3', 'iberekodo 3': 'iberekodo 3', 
                                     'iberekodo 1': 'iberekodo 1', 'iberekodo 2': 'iberekodo 2', 
                                     'totoro  4': 'totoro 4', 'totoro 1': 'totoro 1', 'sabo 1': 'sabo 1', 
                                     'totoro 2': 'totoro 2', 'ikereku 1': 'ikereku 1', 'ikereku 2': 'ikereku 2', 
@@ -108,14 +108,14 @@ ogun_ward_map = {'abeokuta north': {'totoro 3': 'totoro 3', 'iberekodo 3': 'iber
                            'ogere 2': 'ogere 2', 'ikenne 1': 'ikenne 1', 'ilisan 2': 'ilisan 2', 'ilisan 1': 'ilisan 1', 
                            'iperu 3': 'iperu 3', 'ikenne 2': 'ikenne 2'},
                 'imeko afon': {'idofa': 'idofa', 'agborogbomo': 'agborogbomo', 'atapele': 'atapele', 'agberiodo': 'agboriodo', 
-                               'afon': 'afon', 'oke-agbede': 'matale', 'iwoye': 'iwoye', 'ilara': 'ilara', 'owode': 'magboro', 
+                               'afon': 'afon', 'oke-agbede': 'matale', 'iwoye': 'iwoye', 'ilara': 'ilara', 'owode': 'owode', 
                                'imeko': 'imeko'},
                 'ipokia': {'agada': 'agada', 'maun ii': 'mahun 2', 'ijofin': 'ijofin', 'maun 1': 'mahun 1', 'ipokia i': 'ipokia 1',
                             'ajegunle': 'ajegunle', 'tube': 'tube', 'ipokia ii': 'ipokia 2', 'ihunbo/ilase': 'ihunbo ilashe', 
                             'agosasa': 'agosasa', 'ifoyintedo': 'ifonyintedo', 'idiroko': 'idiiroko'},
-                'obafemi owode': {'onidundu': 'ibafo', 'moloko asipa': 'maloko asipa', 'kajola': 'kajola', 'alapako': 'alapako',
+                'obafemi owode': {'onidundu': 'onidundu', 'moloko asipa': 'maloko asipa', 'kajola': 'kajola', 'alapako': 'alapako',
                                    'obafemi': 'obafemi', 'mokoloki': 'molokiki', 'ajura': 'ajura', 'ajebo': 'ajebo', 
-                                   'egbeda': 'egbeda', 'owode': 'magboro', 'oba': 'oba', 'ofada': 'mowe'},
+                                   'egbeda': 'egbeda', 'owode': 'owode', 'oba': 'oba', 'ofada': 'ofada'},
                 'odeda': {'itesi': 'itesi', 'obete': 'obete', 'olodo': 'olodo', 'alagbagba': 'alagbagba', 'osiele': 'osiele', 
                           'alabata': 'alabata', 'opeji': 'opebi', 'ilugun': 'ilugun', 'odeda': 'odeda', 'obantoko': 'obantoto'},
                 'odogbolu': {'ilado/akio': 'ilado', 'ibido/ikise': 'ikise', 'imosan': 'imosan', 'ala igbile': 'igbile', 

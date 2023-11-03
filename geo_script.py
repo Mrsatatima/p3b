@@ -47,7 +47,6 @@ def crt_subset_lyr(layer, query):
         memory_layer.dataProvider().addFeatures([outFeat])
         memory_layer.updateExtents()
     memory_layer.commitChanges()
-    print(len(list(memory_layer.getFeatures())))
     return memory_layer
 
 
@@ -82,10 +81,12 @@ def create_random_point(layer):
         Point: The x and y coordinate of the point (tuple) 
     """
     extent_layer = layer.getFeatures()
-    extents = [extent for extent in extent_layer if extent["bld_count"] != "1-50"]
+    extents = [extent for extent in extent_layer]
     dct = {}
     for idx, extent in enumerate(extents):
-        if extent["bld_count"] == "51-100" and 1 not in dct.values():
+        if extent["bld_count"] == "1-50" and 1 not in dct.values():
+            dct[str(idx)] = 0
+        elif extent["bld_count"] == "51-100" and 1 not in dct.values():
             dct[str(idx)] = 1
         elif extent["bld_count"] == "101-250" and 2 not in dct.values():
             dct[str(idx)] = 2
@@ -118,6 +119,8 @@ def geo_location(wards_layer, extent, state, lga, ward, lga_dct, ward_dct):
 
     query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{lga_dct[lga.strip().lower()].title()}\'AND "wardname" = \'{ward_dct[lga.strip().lower()][ward.strip().lower()].title()}\''
     ward_layer = crt_subset_lyr(wards_layer, query)
+    if list(ward_layer.getFeatures())[0]['status'] == "Invalid":
+        return ("x",'y')
     ward_extent = clip_set_ext_layer(extent, ward_layer)
     location = create_random_point(ward_extent)
     return location
