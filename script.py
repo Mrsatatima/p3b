@@ -7,6 +7,19 @@ import openpyxl
 from geo_script import *
 
 
+def get_sheet_helper(file_name, sheet):
+    new_sheet = []
+    for s in sheet:
+        df = pd.read_excel(file_name, sheet_name=s)
+        cols =df.columns
+        # print(cols)
+        for col in cols:
+            if re.match(r'^20[0-9]{2}\s*ITN\s*MASS\s*CAMPAIGN\s*[-]\s*', str(col), re.IGNORECASE):
+                # print(col)
+                new_sheet.append(s)
+                break
+    return new_sheet
+
 def get_sheets(file_name):
     """
         this function gathers all the list of sheet needed for 
@@ -18,7 +31,9 @@ def get_sheets(file_name):
     """
     excel_file = pd.ExcelFile(file_name)
     list_sheets = excel_file.sheet_names
-    needed_sheets = [sheet for sheet in list_sheets if re.match(r'^[0-9]+[.]?', sheet) ]
+    needed_sheets = [sheet for sheet in list_sheets if re.match(r'^[0-9]+[.]?', sheet)]
+    if len(needed_sheets) == 0:
+        return get_sheet_helper(file_name,list_sheets)
     excel_file.close()
 
     return needed_sheets

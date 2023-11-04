@@ -19,7 +19,7 @@ def main(state):
     """
     sheets = get_sheets(file_name)
     # print(sheets,len(sheets))
-    for sheet in sheets:
+    for sheet in sheets[9:]:
         # print(sheet)
         lga = sheet.split('.')[1].strip().lower().title()
         print(lga)
