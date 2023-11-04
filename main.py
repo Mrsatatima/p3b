@@ -1,9 +1,9 @@
 from script import *
 
-file_name = "2021_Ogun_P3B.xlsx"
+file_name = "2021_Jigawa_P3B.xlsx"
 needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2021)"]
-lga_dct = ogun_lga_map
-ward_dct = ogun_wards_map
+lga_dct = jigawa_lga_map
+ward_dct = jigawa_wards_map
 
 
 def main(state):
@@ -37,4 +37,4 @@ def main(state):
 
 
 if __name__ == "__main__":
-    main("Ogun")
+    main("Jigawa")
