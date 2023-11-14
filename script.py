@@ -218,7 +218,24 @@ def create_random_cluster(data_frame, state, lga, lga_dct, ward_dct, clusters = 
 
 
 def populate_wards(data_frame):
-    pass 
+    for idx in range(len(data_frame)):
+        if not re.match(r'^nan', str(data_frame['Wards'][idx]),re.IGNORECASE):
+            if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
+                ward = data_frame['Wards'][idx]
+        if not re.match(r'^nan', str(data_frame['List of contiguous communities/ settlements'][idx]),re.IGNORECASE):
+            if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
+                group.append(idx)
+        # print(str(data_frame['Wards'][idx]))
+        if re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
+            # print(ward, group)
+            if ward != "" and len(group) != 0:
+                print(group, ward)
+                for ix in group:
+                    data_frame.loc[ix,['Wards']]= ward
+                ward =""
+                group = []
+    return data_frame
+    
 
 def write_to_excel(data_frame, file_name, sheet_name):
     """
