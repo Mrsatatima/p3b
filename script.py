@@ -247,6 +247,11 @@ def populate_wards(data_frame):
     return data_frame
 
 
+def populate_DH(data_frame):
+    pass
+
+
+
 def write_to_excel(data_frame, file_name, sheet_name):
     """
         this function writes a sheet to an existing workbook
