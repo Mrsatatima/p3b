@@ -230,7 +230,7 @@ def populate_wards(data_frame):
                         settlement (pandas dataframe)
     """
     group = []
-    ward =""
+    ward = ""
     for idx in range(len(data_frame)):
         if not re.match(r'^nan', str(data_frame['Wards'][idx]), re.IGNORECASE):
             if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
@@ -248,8 +248,25 @@ def populate_wards(data_frame):
 
 
 def populate_DH(data_frame):
-    pass
-
+    """
+    """
+    group = []
+    dh = ""
+    for idx in range(len(data_frame)):
+        if not re.match(r'^nan', str(data_frame['Wards'][idx]), re.IGNORECASE):
+            if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
+                if not re.match(r'^nan', str(data_frame['Name of DH'][idx]), re.IGNORECASE):
+                    dh = data_frame['Name of DH'][idx]
+        if not re.match(r'^nan', str(data_frame['List of contiguous communities/ settlements'][idx]), re.IGNORECASE):
+            if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
+                group.append(idx)
+        if re.match(r'^nan', str(data_frame['List of contiguous communities/ settlements'][idx]), re.IGNORECASE):
+            if dh != "" and len(group) != 0:
+                for i in group:
+                    data_frame.loc[i, ['Name of DH']] = dh
+                dh = ""
+                group = []
+    return data_frame
 
 
 def write_to_excel(data_frame, file_name, sheet_name):
