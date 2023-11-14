@@ -37,6 +37,17 @@ def cluster_main(state):
 
 
 def populate_p3b_main(state):
+    """
+        this function runs the whole process for populating the p3b,
+        it calls functions from script.py,it cleans the p3b by setting
+        the actual header and populating wards and DHs. it then writes
+        to an excel file
+        Input:
+            state: Name of state you want to clean
+        Output:
+            none
+    """
+
     sheets = get_sheets(file_name)
     for sheet in sheets:
         demo_df = pd.read_excel(file_name, sheet_name=sheet)
