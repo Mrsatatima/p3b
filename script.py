@@ -217,6 +217,9 @@ def create_random_cluster(data_frame, state, lga, lga_dct, ward_dct, clusters = 
     return final_df
 
 
+def populate_wards(data_frame):
+    pass 
+
 def write_to_excel(data_frame, file_name, sheet_name):
     """
         this function writes a sheet to an existing workbook
