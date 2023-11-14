@@ -168,7 +168,7 @@ def drop_subtotal_rows(data_frame, ward_list):
     return new_wards_df
 
 
-def create_random_cluster(data_frame, state, lga, lga_dct, ward_dct, clusters = 8):
+def create_random_cluster(data_frame, state, lga, lga_dct, ward_dct, clusters= 8):
     """
         this function takes in dataframe created using the drop_subtotal_rows
         its uses the cumulative frequency columns to create random clusters
@@ -218,24 +218,35 @@ def create_random_cluster(data_frame, state, lga, lga_dct, ward_dct, clusters = 
 
 
 def populate_wards(data_frame):
+    """
+        this function populates the cells on the ward column with respective
+        ward names, its assign a ward to each settlement since on the p3b
+        template the ward column is a merged column
+        Input:
+            data_frame: it take a cleaned p3b data frame with actual header
+                        and first blank column removed (pandas dataframe)
+        Output:
+            data_frame: a data frame with wards populated for each s
+                        settlement (pandas dataframe)
+    """
+    group = []
+    ward =""
     for idx in range(len(data_frame)):
-        if not re.match(r'^nan', str(data_frame['Wards'][idx]),re.IGNORECASE):
+        if not re.match(r'^nan', str(data_frame['Wards'][idx]), re.IGNORECASE):
             if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
                 ward = data_frame['Wards'][idx]
-        if not re.match(r'^nan', str(data_frame['List of contiguous communities/ settlements'][idx]),re.IGNORECASE):
+        if not re.match(r'^nan', str(data_frame['List of contiguous communities/ settlements'][idx]), re.IGNORECASE):
             if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
                 group.append(idx)
-        # print(str(data_frame['Wards'][idx]))
         if re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
-            # print(ward, group)
             if ward != "" and len(group) != 0:
                 print(group, ward)
-                for ix in group:
-                    data_frame.loc[ix,['Wards']]= ward
-                ward =""
+                for i in group:
+                    data_frame.loc[i, ['Wards']] = ward
+                ward = ""
                 group = []
     return data_frame
-    
+
 
 def write_to_excel(data_frame, file_name, sheet_name):
     """
