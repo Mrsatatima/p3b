@@ -6,7 +6,7 @@ lga_dct = jigawa_lga_map
 ward_dct = jigawa_wards_map
 
 
-def main(state):
+def cluster_main(state):
     """
         this function runs the whole process, it calls functions
         from script.py and geo_script.py it cleans the p3b create the cluster
@@ -36,5 +36,16 @@ def main(state):
         write_to_excel(final_df, f"{state}_cluster.xlsx", sheet)
 
 
+def populate_p3b_main(state):
+    sheets = get_sheets(file_name)
+    for sheet in sheets:
+        demo_df = pd.read_excel(file_name, sheet_name=sheet)
+        row_index = actual_header_row(demo_df)
+        clean_data = remove_first_blank_column(file_name, row_index, sheet)
+        ward_pop_df = populate_wards(clean_data)
+        dh_pop_df = populate_dh(ward_pop_df)
+        write_to_excel(dh_pop_df, f"{state}_p3b_populated.xlsx", sheet)
+
+
 if __name__ == "__main__":
-    main("Jigawa")
+    populate_p3b_main("Jigawa")
