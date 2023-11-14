@@ -240,7 +240,6 @@ def populate_wards(data_frame):
                 group.append(idx)
         if re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
             if ward != "" and len(group) != 0:
-                print(group, ward)
                 for i in group:
                     data_frame.loc[i, ['Wards']] = ward
                 ward = ""
