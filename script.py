@@ -226,7 +226,7 @@ def populate_wards(data_frame):
             data_frame: it take a cleaned p3b data frame with actual header
                         and first blank column removed (pandas dataframe)
         Output:
-            data_frame: a data frame with wards populated for each s
+            data_frame: a data frame with wards populated for each 
                         settlement (pandas dataframe)
     """
     group = []
@@ -247,8 +247,19 @@ def populate_wards(data_frame):
     return data_frame
 
 
-def populate_DH(data_frame):
+def populate_dh(data_frame):
     """
+        this function populates the cells on the dh column with respective
+        dh names, its assign a dh to each settlement since on the p3b
+        template the settlements are grouped per DH but the name of 
+        the dh is only on the settlment it is located in
+        Input:
+            data_frame: it take a cleaned p3b data frame with actual header
+                        and first blank column removed and wards being 
+                        populated(pandas dataframe)
+        Output:
+            data_frame: a data frame with dh populated for each
+                        settlement (pandas dataframe)
     """
     group = []
     dh = ""
@@ -291,6 +302,3 @@ def write_to_excel(data_frame, file_name, sheet_name):
         data_frame.to_excel(writer, sheet_name, index=False)
     # writer.close()
     return "DONE"
-
-
- 
