@@ -1,6 +1,6 @@
 from script import *
 
-file_name = "2021_Jigawa_P3B.xlsx"
+file_name = "2023_Kwara_P3B.xlsx"
 needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2021)"]
 lga_dct = jigawa_lga_map
 ward_dct = jigawa_wards_map
@@ -50,6 +50,8 @@ def populate_p3b_main(state):
 
     sheets = get_sheets(file_name)
     for sheet in sheets:
+        lga = sheet.split('.')[1].strip().lower().title()
+        print(lga)
         demo_df = pd.read_excel(file_name, sheet_name=sheet)
         row_index = actual_header_row(demo_df)
         clean_data = remove_first_blank_column(file_name, row_index, sheet)
@@ -59,4 +61,4 @@ def populate_p3b_main(state):
 
 
 if __name__ == "__main__":
-    populate_p3b_main("Jigawa")
+    populate_p3b_main("Kwara")

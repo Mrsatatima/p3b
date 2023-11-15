@@ -299,6 +299,7 @@ def write_to_excel(data_frame, file_name, sheet_name):
     # work_book = openpyxl.load_workbook(file_name, data_only=True)
     with pd.ExcelWriter(file_name, "openpyxl", mode="a", if_sheet_exists='replace') as writer:
         # writer.book = work_book
+        data_frame.fillna("")
         data_frame.to_excel(writer, sheet_name, index=False)
     # writer.close()
     return "DONE"
