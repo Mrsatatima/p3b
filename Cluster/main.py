@@ -5,7 +5,7 @@ from cluster import *
 from helper import kwara_lga_map, kwara_wards_map
 
 file_name = "2023_Kwara_P3B.xlsx"
-needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2021)"]
+needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2023)"]
 lga_dct = kwara_lga_map
 ward_dct = kwara_wards_map
 
