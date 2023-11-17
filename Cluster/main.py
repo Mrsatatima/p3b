@@ -1,12 +1,16 @@
-from script import *
+import pandas as pd
 
-file_name = "2023_Adamawa_P3B.xlsx"
+from p3b import get_sheets, actual_header_row, remove_blank_wards_rows, remove_first_blank_column, remove_unwanted_columns, write_to_excel
+from cluster import *
+from helper import kwara_lga_map, kwara_wards_map
+
+file_name = "2023_Kwara_P3B.xlsx"
 needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2021)"]
-lga_dct = jigawa_lga_map
-ward_dct = jigawa_wards_map
+lga_dct = kwara_lga_map
+ward_dct = kwara_wards_map
 
 
-def cluster_main(state):
+def main(state):
     """
         this function runs the whole process, it calls functions
         from script.py and geo_script.py it cleans the p3b create the cluster
@@ -69,4 +73,4 @@ def populate_p3b_main(state):
 
 
 if __name__ == "__main__":
-    populate_p3b_main("Adamawa")
+    main("Kwara")
