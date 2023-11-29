@@ -1,4 +1,4 @@
-def get_p3b_list(df, LGA, p3b=True):
+def get_p3b_list(df, LGA):
     """
         Extracts a list of settlements from a DataFrame containing P3B information.
 
@@ -23,20 +23,20 @@ def get_p3b_list(df, LGA, p3b=True):
         # Extract the settlement information from the appropriate column based on the p3b parameter
         if str(df["List of contiguous communities/ settlements"][idx]) not in ["", " ", "NAN", "nan", "0"]\
             and not str(df['List of contiguous communities/ settlements'][idx]).isdigit():
-            settlement = " ".join(str(df[f"{'List of contiguous communities/ settlements' if p3b else 'P3B Name'}"][idx]).lower().replace(".", "").replace(".", "").replace(")", "").replace("(", "").strip().split())
+            settlement = " ".join(str(df['List of contiguous communities/ settlements' ][idx]).lower().replace(".", "").replace(".", "").replace(")", "").replace("(", "").strip().split())
             
             # Extract the LGA information from the input parameter
             lga = f"{LGA}".lower().strip()
 
             # Extract the ward information from the appropriate column based on the p3b parameter
-            ward = str(df[f"{'Wards' if p3b else 'Ward'}"][idx]).lower().strip()
+            ward = str(df['Wards'][idx]).lower().strip()
 
             # Add the settlement information to the p3b_list dictionary
             if lga not in p3b_list:
                 p3b_list[lga] = {}
             if ward not in p3b_list[lga]:
                 p3b_list[lga][ward] = set()
-            if settlement != "nan" and p3b and str(df['List of contiguous communities/ settlements'][idx]) not in ["", " ", "Nan", "NAN", "nan", "0", 0]:
+            if settlement != "nan" and str(df['List of contiguous communities/ settlements'][idx]) not in ["", " ", "Nan", "NAN", "nan", "0", 0]:
                 p3b_list[lga][ward].add(settlement)
 
     # Sort the settlements in each ward by name
@@ -44,4 +44,4 @@ def get_p3b_list(df, LGA, p3b=True):
         p3b_list[LGA.lower()][key] = sorted(values)
 
     # Return the p3b_list dictionary and the settlement count
-    return p3b_list, 
+    return p3b_list

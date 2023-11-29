@@ -204,5 +204,5 @@ def get_lga_name(sheet):
     try:
         lga = lga_list[1].strip().lower().title()
     except:
-        lga = lga_list.strip().lower().title()
+        lga = lga_list[0].strip().lower().title()
     return lga
