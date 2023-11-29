@@ -1,6 +1,6 @@
 import pandas as pd
 
-from p3b import get_sheets, actual_header_row, remove_blank_wards_rows, remove_first_blank_column, remove_unwanted_columns, write_to_excel
+from p3b import get_sheets, actual_header_row, remove_blank_wards_rows, remove_first_blank_column, remove_unwanted_columns, write_to_excel,get_lga_name
 from cluster import *
 from helper import kwara_lga_map, kwara_wards_map
 
@@ -25,18 +25,14 @@ def main(state):
     # print(sheets,len(sheets))
     for sheet in sheets:
         # print(sheet)
-        lga_list = sheet.split('.')
-        try:
-            lga = lga_list[1].strip().lower().title()
-        except:
-            lga = lga_list.strip().lower().title()
-        print(lga)
+      
         demo_df = pd.read_excel(file_name, sheet_name=sheet)
         row_index = actual_header_row(demo_df)
         clean_data = remove_first_blank_column(file_name, row_index, sheet)
         new_data = remove_unwanted_columns(clean_data, needed_columns)
         base_data = remove_blank_wards_rows(new_data)
         ward_list = []
+        lga = get_lga_name(sheet)
         if lga in kwara_security_challenged:
             ward_list = kwara_security_challenged[lga]
         wards_df = drop_subtotal_rows(base_data, ward_list)
