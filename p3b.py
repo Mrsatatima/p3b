@@ -197,3 +197,12 @@ def write_to_excel(data_frame, file_name, sheet_name):
         data_frame.to_excel(writer, sheet_name, index=False)
     # writer.close()
     return "DONE"
+
+
+def get_lga_name(sheet):
+    lga_list = sheet.split('.')
+    try:
+        lga = lga_list[1].strip().lower().title()
+    except:
+        lga = lga_list.strip().lower().title()
+    return lga
