@@ -1,6 +1,8 @@
 import pandas as pd
 import openpyxl
-
+import difflib
+import os
+from copy import deepcopy
 
 
 def write_rrcollect_csv(data_frame):
@@ -72,7 +74,7 @@ def write_rrcollect_csv(data_frame):
     return settlement_dataframe, dh_dataframe
 
 
-def write_grid3_csv(data_frame,state):
+def write_grid3_csv(data_frame, state):
     """
         extracts all settlments points of a state from the GRID3 data sets.
         it arrange the columns in a format suitable for matching process
@@ -146,7 +148,8 @@ def get_p3b_list(df, LGA):
     # Return the p3b_list dictionary and the settlement count
     return p3b_list
 
-def get_captured_list(df, LGA, lga_dict,grid3=False):
+
+def get_captured_list(df, LGA, lga_dict, grid3=False):
 
     """
         Returns a dictionary of captured settlements in a given Local Government Area
@@ -193,3 +196,277 @@ def get_captured_list(df, LGA, lga_dict,grid3=False):
                 captured_list[lga][ward][settlement] = f"{latitude}|{longitude}" if grid3 else f"{latitude}|{longitude}|{accuracy}|{altitude}"
 
     return captured_list
+
+
+def matching_same_name(p3b_list, capture_list, perfect_match, LGA, lga_dict, ward_dict, captured=True):
+    """
+        Matches settlements in the P3B list with those in the capture list that have the same name, 
+        and returns a dictionary of perfect matches. 
+        
+        Args:
+            p3b_list (dict): Dictionary of settlements in P3B list.
+            capture_list (dict): Dictionary of captured settlements.
+            perfect_match (dict): Dictionary of perfect matches.
+            LGA (str): Name of Local Government Area.
+            captured (bool): Whether the capture list is a RR collect or a GRID3 list. 
+                Defaults to True.
+        
+        Returns:
+            tuple: A tuple containing the updated P3B list, capture list, perfect match dictionary, and count of matches.
+    """
+    settlement_list = {}
+    count = 0
+    
+    # Iterate through the P3B list and compare settlements to the captured settlements.
+    for lga, wards in p3b_list.items():
+        if lga_dict[lga] in capture_list:
+            for ward in wards:
+               
+                # print(ward,com_ward_dict[ward])
+                if ward_dict[ward] in capture_list[lga_dict[lga]]:
+                    for settlement in wards[ward]:
+                        if settlement in capture_list[lga_dict[lga]][ward_dict[ward]]:
+                            # Add the settlement to the perfect match dictionary.
+                            if lga not in perfect_match:
+                                perfect_match[lga] = {}
+                            if ward not in perfect_match[lga]:
+                                perfect_match[lga][ward] = {}
+                            perfect_match[lga][ward][settlement] = {settlement: capture_list[lga_dict[lga]][ward_dict[ward]][settlement]} \
+                                if captured else {settlement: settlement}
+                            count += 1
+                            
+                            # Remove the settlement from the capture list.
+                            if captured:
+                                capture_list[lga_dict[lga]][ward_dict[ward]].pop(settlement)
+                            else:
+                                capture_list[lga_dict[lga]][ward_dict[ward]].pop(settlement)
+                            
+                            # Add the settlement to the settlement list.
+
+                            if ward not in settlement_list:
+                                settlement_list[ward] = []
+                            settlement_list[ward].append(settlement)
+    
+    # Remove settlements from the P3B list that have been matched using the settlement list.
+    # for lg in LGA:
+    
+    for ward, settlements in settlement_list.items():
+        for settlement in settlements:
+            if ward in p3b_list[LGA.lower()]:
+                if settlement in p3b_list[LGA.lower()][ward]:
+                    p3b_list[LGA.lower()][ward].remove(settlement)
+    
+    # Return the updated P3B list, capture list, perfect match dictionary, and count of matches.
+    return p3b_list, capture_list, perfect_match, count
+
+
+def match_phrases(phrase1, phrase2, ratio=0.8):
+    """
+        Compares two phrases and returns whether they are a match based on a similarity ratio.
+
+        Args:
+            phrase1 (str): The first phrase to compare.
+            phrase2 (str): The second phrase to compare.
+            ratio (float, optional): The minimum similarity ratio required to consider the phrases a match. Defaults to 0.8.
+
+        Returns:
+            tuple: A tuple containing a boolean indicating whether the phrases are a match, and the similarity ratio between them.
+    """
+    # If either phrase is empty or only contains whitespace, they cannot be a match
+    if phrase1 in [" ",""] or phrase2 in [" ",""]:
+        return False, 0
+    
+    # Calculate the similarity ratio between the two phrases using the SequenceMatcher class from difflib
+    similarity_ratio = difflib.SequenceMatcher(None, phrase1, phrase2).ratio()
+    
+    # If the similarity ratio is above the specified threshold, consider the phrases a match
+    if similarity_ratio >= ratio:  
+        return True, similarity_ratio
+    else:
+        return False, similarity_ratio
+
+
+def similar_name(p3b_list, capture_list, perfect_match, LGA, ratio, lga_dict, ward_dict, dictionary=False):
+    """
+        Find similar names between two dictionaries of settlements.
+
+        Parameters:
+        -----------
+        p3b_list : dict
+            A dictionary of settlements with Local Government Areas and wards as keys from P3B.
+        capture_list : dict
+            A dictionary of settlements with Local Government Areas and wards as keys from RR Collect of GRID3.
+        perfect_match : dict
+            A dictionary to store the matching settlements.
+        LGA : str
+            A string that specifies the Local Government Area to match.
+        ratio : float
+            A float between 0 and 1 that specifies the ratio of similarity between the settlement names.
+        captured : bool, optional
+            A boolean value that specifies if the settlement name should be captured or not.
+        dictionary : bool, optional
+            A boolean value that specifies if the common words in the settlement names should be removed.
+
+        Returns:
+        --------
+        tuple
+            A tuple containing four elements:
+            - A dictionary of matching settlements.
+            - A dictionary of settlements with unmatched settlements removed.
+            - The number of settlements removed.
+            - A dictionary of settlements that did not match.
+    """
+    p3b_list=deepcopy(p3b_list)  # Make a copy of p3b_list to avoid modifying the original
+    capture_list=deepcopy(capture_list)  # Make a copy of capture_list to avoid modifying the original
+    count =0  # Initialize a count variable to zero
+    settlement_list = {}  # Create an empty dictionary to store the settlement data
+
+    # Loop through the LGA and wards in p3b_list
+    for lga, wards in p3b_list.items():
+        if lga_dict[lga] in capture_list:  # Check if the LGA is in the capture_list or matching
+            # Loop through the wards in the p3b_list
+            for ward in wards:
+                if ward_dict[ward] in capture_list[lga_dict[lga]]:  # Check if the ward is in the capture_list for the current LGA
+                    # Loop through the settlements in the current ward
+                    for settlement in wards[ward]:
+                        matcthin_list = {}  # Initialize an empty dictionary to store matching settlements
+
+                        # Loop through the settlements in the capture_list for the current LGA and ward
+                        for settlement2 in capture_list[lga_dict[lga]][ward_dict[ward]]:
+                            common_words = ["anguwan","anguwar","anguwa","angwa","ang","unguwan","unguwar","unguwa"
+                                            "alhaji","alh", "gidan","gildan","jauro","ung","g/","gida","gidan",
+                                            "c/garin",'c/garin',"c/", "cikin","garin","village","head","mallam","malam",
+                                            "primary", "secondary","hospital","dh","sec","line","street","str",
+                                            "s/garin","sabon gari","sabongari","gari","k/","kauyen","kauye","katangar",
+                                            "settlement","road","rd","town","street","str"]  # Define a list of common words to remove from settlement names
+                            common_words.append(lga)
+                            settlement_remove = settlement  # Set the settlement_remove variable to the current settlement
+                            settlement2_remove = settlement2  # Set the settlement2_remove variable to the current settlement in the capture_list
+                            if dictionary: # if dictionary is true remove common words
+                                for word in common_words: # loop through common_words list
+                                    settlement_remove = settlement_remove.replace(word,"") # remove common words from settlement
+                                    settlement2_remove = settlement2_remove.replace(word,"") # remove common words from settlement2
+                            settlement2_remove.strip() # remove leading/trailing spaces from settlement2_remove
+                            settlement_remove.strip() # remove leading/trailing spaces from settlement_remove
+                            get_match = match_phrases(settlement_remove,settlement2_remove,ratio) # get match between settlement and settlement2
+                            if get_match[0]: # if get_match is is true
+                                matcthin_list[settlement2] = get_match[1] # add settlement2 and its match ratio to matcthin_list
+                        if matcthin_list: # if matcthin_list is not empty
+                            settlement2 = max(matcthin_list, key=matcthin_list.get) # get settlement2 with highest match ratio
+                            count+=1
+                            if lga not in perfect_match: # if lga not in perfect_match
+                                perfect_match[lga]={} # add lga to perfect_match
+                            if ward not in perfect_match[lga]: # if ward not in perfect_match[lga]
+                                perfect_match[lga][ward]={} # add ward to perfect_match[lga]
+                            if settlement not in perfect_match[lga][ward]: # if settlement not in perfect_match[lga][ward]
+                                perfect_match[lga][ward][settlement]={} # add settlement to perfect_match[lga][ward]
+                            perfect_match[lga][ward][settlement][settlement2]=capture_list[lga_dict[lga]][ward_dict[ward]][settlement2] 
+                            # add settlement and its best match (settlement2) to perfect_match[lga][ward]
+                            capture_list[lga_dict[lga]][ward_dict[ward]].pop(settlement2) # remove settlement2 from capture_list
+                            if ward not in settlement_list: # if ward not in settlement_list
+                                settlement_list[ward] =set() # add ward to settlement_list
+                            settlement_list[ward].add(settlement) # add settlement to settlement_list[ward]
+
+    # loop through settlement_list to remove settlements that are matched in p3b_list
+    # for lg in LGA:
+    for ward, settlements in settlement_list.items():
+        for settlement in settlements:
+            if ward in p3b_list[LGA.lower()]:
+                if settlement in p3b_list[LGA.lower()][ward]:
+                    p3b_list[LGA.lower()][ward].remove(settlement)
+    # return the following variables
+    return perfect_match, p3b_list, count, capture_list
+
+def create_excel(matched_settlements, unmatched_settlements,LGA, file_name, grid3=False,field_name="GRID3 Name"):
+    """
+        Creates an excel sheet with settlement data for a given Local Government Area (LGA).
+
+        Args:
+            matched_settlements (dict): A dictionary containing matched settlements information.
+            unmatched_settlements (dict): A dictionary containing unmatched settlements information.
+            LGA (str): Name of the Local Government Area (LGA).
+            file_name (str): Name of the Excel file to be created.
+            grid3 (bool, optional): A boolean value indicating whether its GRID3 or RR Collect.
+                                    Defaults to False.
+            field_name (str, optional): Name of the field to be used for Grid3 name if grid3 is True.
+                                        Defaults to "GRID3 Name".
+
+        Returns:
+            str: A string indicating that the function has finished execution ("DONE").
+    """
+
+    lga_name = []
+    ward_name =[]
+    p3b_name = []
+    grid3_name = []
+    capture_name= []
+    coordinate = []
+    lat  =[]
+    lon = []
+    acc = []
+    alt = []
+
+    # Loop through the matched_settlements dictionary to extract information
+    # and append it to respective lists
+    for lga, wards in matched_settlements.items():
+        for ward, dhs in wards.items():
+            for dh, dh2 in dhs.items():
+                text =""
+                cod_text =""
+                for name, coord in dh2.items():
+                    text += f"{name}"
+                    cod_text += f"{coord}"
+                cod =cod_text.split("|")
+                lat.append(cod[0])
+                lon.append(cod[1])
+                if len(cod) ==4:
+                    acc.append(cod[2])
+                    alt.append(cod[3])
+                else:
+                    acc.append("")
+                    alt.append("")
+
+                capture_name.append(text.capitalize())
+                lga_name.append(lga.capitalize())
+                ward_name.append(ward.capitalize())
+                p3b_name.append(dh.capitalize())
+
+    # Loop through the unmatched_settlements dictionary to extract information
+    # and append it to respective lists
+    for lga, wards in unmatched_settlements.items():
+        for ward, dhs in wards.items():
+            for dh in dhs:
+                coordinate.append("")
+                grid3_name.append(" ")
+                capture_name.append(" ")
+                lga_name.append(lga.capitalize())
+                ward_name.append(ward.capitalize())
+                p3b_name.append(dh)
+                lat.append("")
+                lon.append("")
+                acc.append("")
+                alt.append("")
+
+    # Create pre_reconciled DataFrame with the extracted information
+    if not grid3:
+        pre_reconciled = pd.DataFrame({"LGA":lga_name,"Ward":ward_name,"DH P3B Name":p3b_name,
+                            f"{field_name}":capture_name, "Latitude":lat,"Longitude":lon,
+                            "Accuracy":acc,"Altitude":alt})
+    else:
+        pre_reconciled = pd.DataFrame({"LGA":lga_name,"Ward":ward_name,"DH P3B Name":p3b_name,
+                            f"{field_name}":capture_name, "Latitude":lat,"Longitude":lon,})
+
+    # Print pre_reconciled DataFrame
+    print(pre_reconciled)
+    #create excel file using file name if its not in the directory
+    if not os.path.isfile(file_name):
+        wb = openpyxl.Workbook()  
+        wb.save(file_name)
+
+    # Open the workbook and create a writer object to write the DataFrame to the sheet
+    book = openpyxl.load_workbook(file_name)
+    writer = pd.ExcelWriter(file_name, "openpyxl")
+    writer.book =book
+    pre_reconciled.to_excel(writer, sheet_name=f'{LGA}',index=False )
+    writer.close()
+    return "DONE"
