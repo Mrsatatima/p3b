@@ -1,4 +1,6 @@
 import pandas as pd
+import openpyxl
+
 
 
 def write_rrcollect_csv(data_frame):
@@ -67,6 +69,7 @@ def write_rrcollect_csv(data_frame):
     print(dh_dataframe)
     settlement_dataframe.to_csv("Cleaned_adamawa_settlement_capture.csv", index=False)
     dh_dataframe.to_csv("Cleaned_adamawa_DH_capture.csv", index=False)
+    return settlement_dataframe, dh_dataframe
 
 
 def write_grid3_csv(data_frame,state):
@@ -92,6 +95,7 @@ def write_grid3_csv(data_frame,state):
 
     settlement_dataframe = pd.DataFrame(settlement_data, index=None)
     settlement_dataframe.to_csv(f"{state}_grid3_settlements.csv", index=False)
+    return settlement_dataframe
 
 
 def get_p3b_list(df, LGA):
