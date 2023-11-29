@@ -3,6 +3,7 @@ import openpyxl
 import difflib
 import os
 from copy import deepcopy
+import re
 
 
 def write_rrcollect_csv(data_frame):
@@ -123,7 +124,7 @@ def get_p3b_list(df, LGA):
     # Iterate over each row of the DataFrame
     for idx in range(len(df)):
         # Extract the settlement information from the appropriate column based on the p3b parameter
-        if str(df["List of contiguous communities/ settlements"][idx]) not in ["", " ", "NAN", "nan", "0"]\
+        if not re.match(r'^nan', str(df['List of contiguous communities/ settlements'][idx]), re.IGNORECASE)\
             and not str(df['List of contiguous communities/ settlements'][idx]).isdigit():
             settlement = " ".join(str(df['List of contiguous communities/ settlements' ][idx]).lower().replace(".", "").replace(".", "").replace(")", "").replace("(", "").strip().split())
             
@@ -222,24 +223,24 @@ def matching_same_name(p3b_list, capture_list, perfect_match, LGA, lga_dict, war
         if lga_dict[lga] in capture_list:
             for ward in wards:
                
-                # print(ward,com_ward_dict[ward])
-                if ward_dict[ward] in capture_list[lga_dict[lga]]:
+                # print(ward,com_ward_dict[lga][ward])
+                if ward_dict[lga][ward] in capture_list[lga_dict[lga]]:
                     for settlement in wards[ward]:
-                        if settlement in capture_list[lga_dict[lga]][ward_dict[ward]]:
+                        if settlement in capture_list[lga_dict[lga]][ward_dict[lga][ward]]:
                             # Add the settlement to the perfect match dictionary.
                             if lga not in perfect_match:
                                 perfect_match[lga] = {}
                             if ward not in perfect_match[lga]:
                                 perfect_match[lga][ward] = {}
-                            perfect_match[lga][ward][settlement] = {settlement: capture_list[lga_dict[lga]][ward_dict[ward]][settlement]} \
+                            perfect_match[lga][ward][settlement] = {settlement: capture_list[lga_dict[lga]][ward_dict[lga][ward]][settlement]} \
                                 if captured else {settlement: settlement}
                             count += 1
                             
                             # Remove the settlement from the capture list.
                             if captured:
-                                capture_list[lga_dict[lga]][ward_dict[ward]].pop(settlement)
+                                capture_list[lga_dict[lga]][ward_dict[lga][ward]].pop(settlement)
                             else:
-                                capture_list[lga_dict[lga]][ward_dict[ward]].pop(settlement)
+                                capture_list[lga_dict[lga]][ward_dict[lga][ward]].pop(settlement)
                             
                             # Add the settlement to the settlement list.
 
@@ -326,13 +327,13 @@ def similar_name(p3b_list, capture_list, perfect_match, LGA, ratio, lga_dict, wa
         if lga_dict[lga] in capture_list:  # Check if the LGA is in the capture_list or matching
             # Loop through the wards in the p3b_list
             for ward in wards:
-                if ward_dict[ward] in capture_list[lga_dict[lga]]:  # Check if the ward is in the capture_list for the current LGA
+                if ward_dict[lga][ward] in capture_list[lga_dict[lga]]:  # Check if the ward is in the capture_list for the current LGA
                     # Loop through the settlements in the current ward
                     for settlement in wards[ward]:
                         matcthin_list = {}  # Initialize an empty dictionary to store matching settlements
 
                         # Loop through the settlements in the capture_list for the current LGA and ward
-                        for settlement2 in capture_list[lga_dict[lga]][ward_dict[ward]]:
+                        for settlement2 in capture_list[lga_dict[lga]][ward_dict[lga][ward]]:
                             common_words = ["anguwan","anguwar","anguwa","angwa","ang","unguwan","unguwar","unguwa"
                                             "alhaji","alh", "gidan","gildan","jauro","ung","g/","gida","gidan",
                                             "c/garin",'c/garin',"c/", "cikin","garin","village","head","mallam","malam",
@@ -360,9 +361,9 @@ def similar_name(p3b_list, capture_list, perfect_match, LGA, ratio, lga_dict, wa
                                 perfect_match[lga][ward]={} # add ward to perfect_match[lga]
                             if settlement not in perfect_match[lga][ward]: # if settlement not in perfect_match[lga][ward]
                                 perfect_match[lga][ward][settlement]={} # add settlement to perfect_match[lga][ward]
-                            perfect_match[lga][ward][settlement][settlement2]=capture_list[lga_dict[lga]][ward_dict[ward]][settlement2] 
+                            perfect_match[lga][ward][settlement][settlement2]=capture_list[lga_dict[lga]][ward_dict[lga][ward]][settlement2] 
                             # add settlement and its best match (settlement2) to perfect_match[lga][ward]
-                            capture_list[lga_dict[lga]][ward_dict[ward]].pop(settlement2) # remove settlement2 from capture_list
+                            capture_list[lga_dict[lga]][ward_dict[lga][ward]].pop(settlement2) # remove settlement2 from capture_list
                             if ward not in settlement_list: # if ward not in settlement_list
                                 settlement_list[ward] =set() # add ward to settlement_list
                             settlement_list[ward].add(settlement) # add settlement to settlement_list[ward]
@@ -377,7 +378,7 @@ def similar_name(p3b_list, capture_list, perfect_match, LGA, ratio, lga_dict, wa
     # return the following variables
     return perfect_match, p3b_list, count, capture_list
 
-def create_excel(matched_settlements, unmatched_settlements,LGA, file_name, grid3=False,field_name="GRID3 Name"):
+def create_final_data_frame(matched_settlements, unmatched_settlements,LGA, file_name, grid3=False,field_name="GRID3 Name"):
     """
         Creates an excel sheet with settlement data for a given Local Government Area (LGA).
 
@@ -458,15 +459,5 @@ def create_excel(matched_settlements, unmatched_settlements,LGA, file_name, grid
 
     # Print pre_reconciled DataFrame
     print(pre_reconciled)
-    #create excel file using file name if its not in the directory
-    if not os.path.isfile(file_name):
-        wb = openpyxl.Workbook()  
-        wb.save(file_name)
-
-    # Open the workbook and create a writer object to write the DataFrame to the sheet
-    book = openpyxl.load_workbook(file_name)
-    writer = pd.ExcelWriter(file_name, "openpyxl")
-    writer.book =book
-    pre_reconciled.to_excel(writer, sheet_name=f'{LGA}',index=False )
-    writer.close()
-    return "DONE"
+   
+    return pre_reconciled
