@@ -134,11 +134,16 @@ def within_ward_boundary(settlement_layer,ward_layer, lga_map, wards_map):
     QgsField('dst_km', QVariant.Double),
     QgsField('GRID3_Wrd', QVariant.String, len=35),
     ]
-    settlement_layer.dataProvider().addAttributes(fields)
-    settlement_layer.updateFields()
-    #
-    print(settlement_layer.crs())
+    print([field.name() for field in settlement_layer.fields()])
+
+    settlement_layer.startEditing()
     layer_provider=settlement_layer.dataProvider()
+
+    layer_provider.addAttributes(fields)
+
+    settlement_layer.updateFields()
+    print([field.name() for field in settlement_layer.fields()])
+    print(settlement_layer.crs())
 
     dist = QgsDistanceArea()
     #dist.setSourceCrs(QgsCoordinateReferenceSystem())
@@ -149,31 +154,35 @@ def within_ward_boundary(settlement_layer,ward_layer, lga_map, wards_map):
     #
 
     for settlement in settlement_layer.getFeatures():
-        print("hey")
         ward_name = settlement['Ward']
         lga_name = settlement['LGA']
-        expression = f'"lganame" = \'{lga_map[lga_name]}\''
-    #        print(expression)
+        expression = f'"lganame" = \'{lga_map[lga_name.lower()].title()}\''
+        # print(expression)
     #        break
-        GRID3_ward = wards_map[ward_name]
+        GRID3_ward = wards_map[lga_name.lower()][ward_name.lower()]
         wards = ward_layer.getFeatures(expression)
+        
         ward_geom =None
         for ward in wards:
-            if ward['wardname'] == wards_map[ward_name]:
+            # print(ward['wardname'].lower(), wards_map[lga_name.lower()][ward_name.lower()])
+            if ward['wardname'].lower() == wards_map[lga_name.lower()][ward_name.lower()]:
+                # print("hey")
                 ward_geom = ward.geometry()
                 
-                
     #            ward = [ward for ward in wards]
-    #        print(ward_geom)
+        # print(ward_geom)
+
         if ward_geom:
             settlement_geom = settlement.geometry()
+            print(settlement_geom)
+
     #            settlement_attr =  settlement.attributes()
         
             # Set the values in the feature's attributes
     #            idx_in_ward = settlement_layer.fields().lookupField('in_Ward')
     #            idx_dist_to_ward = settlement_layer.fields().lookupField('Dst_to_wrd')
-            
             if ward_geom.contains(settlement_geom):
+                print("hey")
                 in_ward = "Yes"
                 dist_to_ward = 0.0
                 
@@ -182,7 +191,10 @@ def within_ward_boundary(settlement_layer,ward_layer, lga_map, wards_map):
                 nearest_ward_geom = ward_geom.nearestPoint(settlement_geom)
                 dist_to_ward = dist.measureLine(settlement_geom.asPoint(), nearest_ward_geom.asPoint())/1000
     #         Update the feature with the new attribute values
-            attr_value = {11:in_ward, 12:dist_to_ward,13:GRID3_ward}
-            layer_provider.changeAttributeValues({settlement.id():attr_value})
+            # attr_value = {10:in_ward, 11:dist_to_ward,12:GRID3_ward}
+            # layer_provider.changeAttributeValues({settlement.id():attr_value})
+            settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('in_Ward'), in_ward)
+            settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('dst_km'), dist_to_ward)
+            settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('GRID3_Wrd'), GRID3_ward)
     settlement_layer.commitChanges()
     return settlement_layer
