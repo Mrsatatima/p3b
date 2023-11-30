@@ -174,7 +174,6 @@ def within_ward_boundary(settlement_layer,ward_layer, lga_map, wards_map):
 
         if ward_geom:
             settlement_geom = settlement.geometry()
-            print(settlement_geom)
 
     #            settlement_attr =  settlement.attributes()
         
@@ -182,7 +181,6 @@ def within_ward_boundary(settlement_layer,ward_layer, lga_map, wards_map):
     #            idx_in_ward = settlement_layer.fields().lookupField('in_Ward')
     #            idx_dist_to_ward = settlement_layer.fields().lookupField('Dst_to_wrd')
             if ward_geom.contains(settlement_geom):
-                print("hey")
                 in_ward = "Yes"
                 dist_to_ward = 0.0
                 
