@@ -150,7 +150,7 @@ def get_p3b_list(df, LGA):
     return p3b_list
 
 
-def get_captured_list(df, LGA, lga_dict, grid3=False):
+def get_captured_list(df, LGA, lga_dict, captured_list = {}, grid3=False):
 
     """
         Returns a dictionary of captured settlements in a given Local Government Area
@@ -169,7 +169,7 @@ def get_captured_list(df, LGA, lga_dict, grid3=False):
              where keys are settlements and values are strings of latitude and longitude separated by a '|' character, or, if grid3 is True, separated by '|' and followed by altitude and accuracy separated by '|'.
 
     """
-    captured_list = {}
+    
 
     # Iterate over each row in the dataframe
     for idx in range(len(df)):
@@ -378,7 +378,7 @@ def similar_name(p3b_list, capture_list, perfect_match, LGA, ratio, lga_dict, wa
     # return the following variables
     return perfect_match, p3b_list, count, capture_list
 
-def create_final_data_frame(matched_settlements, unmatched_settlements,LGA, file_name, grid3=False,field_name="GRID3 Name"):
+def create_final_data_frame(matched_settlements, unmatched_settlements, grid3=False,field_name="GRID3 Name"):
     """
         Creates an excel sheet with settlement data for a given Local Government Area (LGA).
 

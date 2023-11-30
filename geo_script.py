@@ -116,7 +116,6 @@ def geo_location(wards_layer, extent, state, lga, ward, lga_dct, ward_dct):
     wards_layer = QgsVectorLayer(wards_layer, "wards", "ogr")
     extent = QgsVectorLayer(extent, "set_extent", "ogr")
     # print(ward_dct[ward.strip().lower()])
-
     query = f'"statename"  =  \'{state}\' AND  "lganame"  =  \'{lga_dct[lga.strip().lower()].title()}\'AND "wardname" = \'{ward_dct[lga.strip().lower()][ward.strip().lower()].title()}\''
     ward_layer = crt_subset_lyr(wards_layer, query)
     if list(ward_layer.getFeatures())[0]['status'] == "Invalid":
