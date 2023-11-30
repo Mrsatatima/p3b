@@ -69,8 +69,12 @@ def write_rrcollect_csv(data_frame, write_csv=False):
     settlement_dataframe = pd.DataFrame(settlement_data, index=None)
     dh_dataframe = pd.DataFrame(DH_data, index=None)
     if write_csv:
-        settlement_dataframe.to_csv("Cleaned_adamawa_settlement_capture.csv", index=False)
-        dh_dataframe.to_csv("Cleaned_adamawa_DH_capture.csv", index=False)
+        settlement_file_name = os.getcwd()+"\\"+"Cleaned_adamawa_settlement_capture.csv"
+        dh_file_name = os.getcwd()+"\\"+"Cleaned_adamawa_DH_capture.csv"
+        settlement_dataframe.to_csv(settlement_file_name, index=False)
+        dh_dataframe.to_csv(dh_file_name, index=False)
+        return settlement_file_name, dh_file_name
+
     return settlement_dataframe, dh_dataframe
 
 

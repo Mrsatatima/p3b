@@ -1,4 +1,7 @@
-from qgis.core import(QgsFeature, QgsVectorLayer,QgsFeatureRequest,QgsFields,QgsApplication,QgsGeometry )
+from qgis.core import(QgsFeature, QgsVectorLayer,QgsFeatureRequest,
+                      QgsFields,QgsApplication,QgsGeometry, QgsField,
+                      QgsDistanceArea, QgsUnitTypes)
+from PyQt5.QtCore import  QVariant
 from processing.core.Processing import Processing
 import processing
 import random
@@ -123,3 +126,63 @@ def geo_location(wards_layer, extent, state, lga, ward, lga_dct, ward_dct):
     ward_extent = clip_set_ext_layer(extent, ward_layer)
     location = create_random_point(ward_extent)
     return location
+
+
+def within_ward_boundary(settlement_layer,ward_layer, lga_map, wards_map):
+    fields = [
+    QgsField('in_Ward', QVariant.String),
+    QgsField('dst_km', QVariant.Double),
+    QgsField('GRID3_Wrd', QVariant.String, len=35),
+    ]
+    settlement_layer.dataProvider().addAttributes(fields)
+    settlement_layer.updateFields()
+    #
+    print(settlement_layer.crs())
+    layer_provider=settlement_layer.dataProvider()
+
+    dist = QgsDistanceArea()
+    #dist.setSourceCrs(QgsCoordinateReferenceSystem())
+    dist.willUseEllipsoid()
+    dist.setEllipsoid(settlement_layer.crs().ellipsoidAcronym())
+    #dist.setEllipsoidalMode(True)
+    print(QgsUnitTypes.toString(dist.lengthUnits()))
+    #
+
+    for settlement in settlement_layer.getFeatures():
+        print("hey")
+        ward_name = settlement['Ward']
+        lga_name = settlement['LGA']
+        expression = f'"lganame" = \'{lga_map[lga_name]}\''
+    #        print(expression)
+    #        break
+        GRID3_ward = wards_map[ward_name]
+        wards = ward_layer.getFeatures(expression)
+        ward_geom =None
+        for ward in wards:
+            if ward['wardname'] == wards_map[ward_name]:
+                ward_geom = ward.geometry()
+                
+                
+    #            ward = [ward for ward in wards]
+    #        print(ward_geom)
+        if ward_geom:
+            settlement_geom = settlement.geometry()
+    #            settlement_attr =  settlement.attributes()
+        
+            # Set the values in the feature's attributes
+    #            idx_in_ward = settlement_layer.fields().lookupField('in_Ward')
+    #            idx_dist_to_ward = settlement_layer.fields().lookupField('Dst_to_wrd')
+            
+            if ward_geom.contains(settlement_geom):
+                in_ward = "Yes"
+                dist_to_ward = 0.0
+                
+            else:
+                in_ward = "No"
+                nearest_ward_geom = ward_geom.nearestPoint(settlement_geom)
+                dist_to_ward = dist.measureLine(settlement_geom.asPoint(), nearest_ward_geom.asPoint())/1000
+    #         Update the feature with the new attribute values
+            attr_value = {11:in_ward, 12:dist_to_ward,13:GRID3_ward}
+            layer_provider.changeAttributeValues({settlement.id():attr_value})
+    settlement_layer.commitChanges()
+    return settlement_layer
