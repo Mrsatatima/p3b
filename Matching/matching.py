@@ -6,7 +6,7 @@ from copy import deepcopy
 import re
 
 
-def write_rrcollect_csv(data_frame):
+def write_rrcollect_csv(data_frame, write_csv=False):
     """
         a function that convert RR_Collect data to a format 
         suitable for matching process. It drops unwanted columns and splits 
@@ -68,14 +68,13 @@ def write_rrcollect_csv(data_frame):
 
     settlement_dataframe = pd.DataFrame(settlement_data, index=None)
     dh_dataframe = pd.DataFrame(DH_data, index=None)
-    print(settlement_dataframe)
-    print(dh_dataframe)
-    settlement_dataframe.to_csv("Cleaned_adamawa_settlement_capture.csv", index=False)
-    dh_dataframe.to_csv("Cleaned_adamawa_DH_capture.csv", index=False)
+    if write_csv:
+        settlement_dataframe.to_csv("Cleaned_adamawa_settlement_capture.csv", index=False)
+        dh_dataframe.to_csv("Cleaned_adamawa_DH_capture.csv", index=False)
     return settlement_dataframe, dh_dataframe
 
 
-def write_grid3_csv(data_frame, state):
+def write_grid3_csv(data_frame, state, write_csv=False):
     """
         extracts all settlments points of a state from the GRID3 data sets.
         it arrange the columns in a format suitable for matching process
@@ -97,7 +96,8 @@ def write_grid3_csv(data_frame, state):
           
 
     settlement_dataframe = pd.DataFrame(settlement_data, index=None)
-    settlement_dataframe.to_csv(f"{state}_grid3_settlements.csv", index=False)
+    if write_csv:
+        settlement_dataframe.to_csv(f"{state}_grid3_settlements.csv", index=False)
     return settlement_dataframe
 
 
@@ -184,9 +184,11 @@ def get_captured_list(df, LGA, lga_dict, captured_list = {}, grid3=False):
         if not grid3:
             accuracy = str(df["Acurracy"][idx]).lower().strip()
             altitude = str(df["Altitude"][idx]).lower().strip()
-
+        if grid3:
+            LGA = lga_dict[LGA.lower()].lower()
+        
         # If the LGA matches the requested LGA
-        if lga == lga_dict[LGA.lower()].lower():#LGA.lower():
+        if lga == LGA.lower():#LGA.lower():
             # Add the settlement to the captured_list dictionary
             if lga not in captured_list:
                 captured_list[lga] = {}
