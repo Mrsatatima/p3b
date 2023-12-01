@@ -20,7 +20,7 @@ def create_to_capture_dict(LGA,to_capture_df,captured_df):
     to_capture_dict ={} 
     capture_list ={}
     for local_gov in LGA:
-        capture_list = get_captured_list(captured_df,local_gov,{},captured_list=capture_list)
+        capture_list = get_captured_list(captured_df, local_gov, {}, captured_list=capture_list)
         to_capture_dict[local_gov.lower()] = {}
         for indx in range(len(to_capture_df)):
             if to_capture_df["LGA"][indx].lower() == local_gov.lower():
@@ -134,8 +134,8 @@ def match(to_capture_list,capture_list):
             not_captured_ward_df = pd.DataFrame({"LGA":cap_lga[:len(not_cap_set)],"Ward":cap_ward[:len(not_cap_set)], "Settlement":list(not_cap_set)})
             
 
-            write_to_excel(captured_ward_df,f"lga\captured\{lga}.xlsx", f'{ward.replace("/"," ")}')
-            write_to_excel(not_captured_ward_df,f"lga\\not_captured\{lga}.xlsx", f'{ward.replace("/"," ")}')
+            write_to_excel(captured_ward_df,f"lga\\captured\\{lga}.xlsx", f'{ward.replace("/"," ")}')
+            write_to_excel(not_captured_ward_df,f"lga\\not_captured\\{lga}.xlsx", f'{ward.replace("/"," ")}')
 
         # append to lga summary data
         total_settlement.append(sum)
@@ -149,3 +149,17 @@ def match(to_capture_list,capture_list):
     with pd.ExcelWriter('Geo Coordinate Capture Summary.xlsx') as writer:
         summary_lga.to_excel(writer, sheet_name='Total per LGA')
         summary_df.to_excel(writer, sheet_name='Total per Ward')
+
+
+def write_within_boundary_xlx(data_frame):
+    lgas = list(data_frame.LGA.unique)
+    for lga in lgas:
+        selection = data_frame['LGA'] == lga
+        col =  ['State', 'LGA', 'Ward',"Name of ettlement","in_Ward","dst_km"]
+        lga_df = data_frame.loc[selection,col]
+        wards = list(lga_df.Ward.unique())
+        for ward in wards:
+            selection = lga_df['Ward'] == ward
+            ward_df = lga_df[selection]
+            write_to_excel(ward_df,f"lga\\out_boundary\\{lga}.xlsx", f'{ward.replace("/"," ")}')
+
