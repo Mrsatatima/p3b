@@ -5,6 +5,7 @@ from PyQt5.QtCore import  QVariant
 from processing.core.Processing import Processing
 import processing
 import random
+import pandas as pd
 from processing.tools import dataobjects
 
 from helper import *
@@ -128,58 +129,59 @@ def geo_location(wards_layer, extent, state, lga, ward, lga_dct, ward_dct):
     return location
 
 
-def within_ward_boundary(settlement_layer,ward_layer, lga_map, wards_map):
+def within_ward_boundary(settlement_layer, ward_layer, lga_map, wards_map):
+    """
+        this function checks which settlments fall outside
+        there respective ward boundary. it then adds new
+        attribute to the settlement layer in_ward (Yes or No),
+        dst_km (distance in Km it is from its original ward) and
+        GRID3_wrd based on the GRID3 data base
+        Input:
+            settlement_layer: layer of settlements point whose accuracy are to
+                            be check (QgsLayer)
+            ward_layer: a layer of the ward boundaries from the state the
+                        settlements belong to (QgsLayer)
+            lga_map: A dictionary mapping the names of LGA in the settlement layer
+                    and that of the ward_layer (dict)
+            wards_map: A dictionary mapping the names of ward in the settlement layer
+                    and that of the ward_layer (dict)
+        Ouput:
+            settlement_layer: A settlement layer with in_wards dst_km and GRID_wrd
+                            attributes populated
+    """
     fields = [
-    QgsField('in_Ward', QVariant.String),
-    QgsField('dst_km', QVariant.Double),
-    QgsField('GRID3_Wrd', QVariant.String, len=35),
+        QgsField('in_Ward', QVariant.String),
+        QgsField('dst_km', QVariant.Double),
+        QgsField('GRID3_Wrd', QVariant.String, len=35),
     ]
-    print([field.name() for field in settlement_layer.fields()])
 
     settlement_layer.startEditing()
-    layer_provider=settlement_layer.dataProvider()
+    layer_provider = settlement_layer.dataProvider()
 
     layer_provider.addAttributes(fields)
 
     settlement_layer.updateFields()
-    print([field.name() for field in settlement_layer.fields()])
     print(settlement_layer.crs())
 
     dist = QgsDistanceArea()
-    #dist.setSourceCrs(QgsCoordinateReferenceSystem())
     dist.willUseEllipsoid()
     dist.setEllipsoid(settlement_layer.crs().ellipsoidAcronym())
-    #dist.setEllipsoidalMode(True)
     print(QgsUnitTypes.toString(dist.lengthUnits()))
-    #
 
     for settlement in settlement_layer.getFeatures():
         ward_name = settlement['Ward']
         lga_name = settlement['LGA']
         expression = f'"lganame" = \'{lga_map[lga_name.lower()].title()}\''
-        # print(expression)
-    #        break
         GRID3_ward = wards_map[lga_name.lower()][ward_name.lower()]
         wards = ward_layer.getFeatures(expression)
         
         ward_geom =None
         for ward in wards:
-            # print(ward['wardname'].lower(), wards_map[lga_name.lower()][ward_name.lower()])
             if ward['wardname'].lower() == wards_map[lga_name.lower()][ward_name.lower()]:
-                # print("hey")
                 ward_geom = ward.geometry()
-                
-    #            ward = [ward for ward in wards]
-        # print(ward_geom)
-
+                break
         if ward_geom:
             settlement_geom = settlement.geometry()
-
-    #            settlement_attr =  settlement.attributes()
-        
-            # Set the values in the feature's attributes
-    #            idx_in_ward = settlement_layer.fields().lookupField('in_Ward')
-    #            idx_dist_to_ward = settlement_layer.fields().lookupField('Dst_to_wrd')
             if ward_geom.contains(settlement_geom):
                 in_ward = "Yes"
                 dist_to_ward = 0.0
@@ -188,11 +190,33 @@ def within_ward_boundary(settlement_layer,ward_layer, lga_map, wards_map):
                 in_ward = "No"
                 nearest_ward_geom = ward_geom.nearestPoint(settlement_geom)
                 dist_to_ward = dist.measureLine(settlement_geom.asPoint(), nearest_ward_geom.asPoint())/1000
-    #         Update the feature with the new attribute values
-            # attr_value = {10:in_ward, 11:dist_to_ward,12:GRID3_ward}
-            # layer_provider.changeAttributeValues({settlement.id():attr_value})
+           
             settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('in_Ward'), in_ward)
             settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('dst_km'), dist_to_ward)
             settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('GRID3_Wrd'), GRID3_ward)
     settlement_layer.commitChanges()
     return settlement_layer
+
+
+def covert_layer_to_dataframe(layer):
+    """
+        This function take a QgsLayer and convert it to a pandas 
+        dataframe
+        Input:
+            layer: The layer you want to convert to 
+                    pandas dataframe (QgsLayer)
+        Output:
+        df: the convert layer (pandas dataframe)
+    """
+    # Initialize an empty list to store feature attributes
+    features_list = []
+
+    # Iterate through features and collect attributes
+    for feature in layer.getFeatures():
+        feature_dict = dict(zip(feature.fields().names(), feature.attributes()))
+        features_list.append(feature_dict)
+
+    # Create a Pandas DataFrame from the list
+    df = pd.DataFrame(features_list)
+
+    return df
