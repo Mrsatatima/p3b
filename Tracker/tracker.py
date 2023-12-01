@@ -1,5 +1,5 @@
 import pandas as pd
-from Matching.matching import get_captured_list, get_p3b_list,  match_phrases
+from Matching.matching import get_captured_list
 from p3b import write_to_excel
 import openpyxl
 import os
@@ -30,7 +30,7 @@ def create_to_capture_dict(LGA,to_capture_df,captured_df):
     return to_capture_dict, capture_list
 
 
-def match(to_capture_list,capture_list):
+def match(state,to_capture_list,capture_list):
     """
         this funtions take teo dictionary of settlements to capture
         and settlments captured. It then compares the teo dict and writes 
@@ -146,7 +146,7 @@ def match(to_capture_list,capture_list):
     summary_lga = pd.DataFrame({"LGA":total_lga,"Total settlement to capture":total_settlement,
                                 "Total settlement captured":total_cap_settlement}, index=None)
     
-    with pd.ExcelWriter('Geo Coordinate Capture Summary.xlsx') as writer:
+    with pd.ExcelWriter(f'{state}_Geo Coordinate Capture Summary.xlsx') as writer:
         summary_lga.to_excel(writer, sheet_name='Total per LGA')
         summary_df.to_excel(writer, sheet_name='Total per Ward')
 
