@@ -1,6 +1,6 @@
 from qgis.core import(QgsFeature, QgsVectorLayer,QgsFeatureRequest,
                       QgsFields,QgsApplication,QgsGeometry, QgsField,
-                      QgsDistanceArea, QgsUnitTypes)
+                      QgsDistanceArea, QgsUnitTypes, QgsProcessingFeatureSourceDefinition)
 from PyQt5.QtCore import  QVariant
 from processing.core.Processing import Processing
 import processing
@@ -30,8 +30,13 @@ def crt_subset_lyr(layer, query):
 
     """
     # Create a memory layer
-    set_extent_uri = f"polygon?crs={layer.crs().authid()}"
-    memory_layer = QgsVectorLayer(set_extent_uri, "set_extent", "memory")
+    if layer.geometryType() == 2:
+        set_extent_uri = f"Polygon?crs={layer.crs().authid()}"
+    elif layer.geometryType() == 0:
+        set_extent_uri = f"Point?crs={layer.crs().authid()}"
+    else:
+        set_extent_uri = f"Polyline?crs={layer.crs().authid()}"
+    memory_layer = QgsVectorLayer(set_extent_uri, f"{layer.name()}", "memory")
     memory_layer.startEditing()
     # Set the memory layer's fields
     memory_layer.dataProvider().addAttributes(layer.dataProvider().fields().toList())
@@ -42,15 +47,19 @@ def crt_subset_lyr(layer, query):
                   'METHOD': 0,
                   }
     run_selection = processing.run('qgis:selectbyexpression', parameters)
+    if run_selection['OUTPUT']:
+        print("Selection successful")
+    else:
+        print("Selection failed")
     # Add the selected features to the memory layer
     selected = run_selection['OUTPUT'].selectedFeatures()
-    outFeat = QgsFeature()
     for feature in selected:
+        outFeat = QgsFeature()
         outFeat.setGeometry(feature.geometry())
         outFeat.setAttributes(feature.attributes())
         memory_layer.dataProvider().addFeatures([outFeat])
         memory_layer.updateExtents()
-    memory_layer.commitChanges()
+    # memory_layer.commitChanges()
     return memory_layer
 
 
@@ -232,6 +241,7 @@ def convert_layer_to_dataframe(layer):
         Output:
         df: the convert layer (pandas dataframe)
     """
+    
     # Initialize an empty list to store feature attributes
     features_list = []
 
@@ -244,3 +254,4 @@ def convert_layer_to_dataframe(layer):
     df = pd.DataFrame(features_list)
 
     return df
+
