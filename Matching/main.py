@@ -50,7 +50,7 @@ def main(state, p3b, matching_data, grid3=True):
         # Get a list of settlements captured in grid3 for the current LGA,
         # and match settlements in the P3B data to settlements in the grid3 data
         if grid3:
-            grid3_list = get_captured_list(matching_df,local_gov,lga_dct, True)
+            grid3_list = get_captured_list(matching_df,local_gov,lga_dct, grid3=True)
         else:
             grid3_list = get_captured_list(matching_df,local_gov, lga_dct)
 

@@ -152,11 +152,11 @@ def match(state,to_capture_list,capture_list):
 
 
 def write_within_boundary_xlx(data_frame):
-    lgas = list(data_frame.LGA.unique)
+    lgas = list(data_frame.LGA.unique())
     for lga in lgas:
         selection = data_frame['LGA'] == lga
-        col =  ['State', 'LGA', 'Ward',"Name of ettlement","in_Ward","dst_km"]
-        lga_df = data_frame.loc[selection,col]
+        col =  ['State', 'LGA', 'Ward', "Name of Settlement", "in_Ward", "dst_km"]
+        lga_df = data_frame.loc[selection, col]
         wards = list(lga_df.Ward.unique())
         for ward in wards:
             selection = lga_df['Ward'] == ward

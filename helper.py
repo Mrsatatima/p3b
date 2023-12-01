@@ -1,7 +1,7 @@
 kwara_lga_map = {'asa': 'asa', 'baruten': 'baruten', 'edu': 'edu', 'ekiti': 'ekiti', 'ifelodun': 'ifelodun',
                  'ilorin east': 'ilorin east', 'ilorin south': 'ilorin south', 'ilorin west': 'ilorin west', 
                  'irepodun': 'irepodun', 'isin': 'isin', 'kaiama': 'kaiama', 'moro': 'moro', 'offa': 'offa', 
-                 'oke ero': 'oke ero','oke-ero':'oke ero', 'oyun': 'oyun', 'patigi': 'pategi'}
+                 'oke ero': 'oke ero','oke-ero':'oke ero', 'oyun': 'oyun', 'patigi': 'pategi','pategi': 'pategi'}
 ogun_lga_map = {'abeokuta north': 'abeokuta north', 'abeokuta south': 'abeokuta south',
                  'ado-odo ota': 'ado odo/ota', 'ewekoro': 'ewekoro', 'ifo': 'ifo', 
                  'ijebu east': 'ijebu east', 'ijebu north-east': 'ijebu north east',
