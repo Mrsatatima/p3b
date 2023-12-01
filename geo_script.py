@@ -129,6 +129,30 @@ def geo_location(wards_layer, extent, state, lga, ward, lga_dct, ward_dct):
     return location
 
 
+def convert_csv_to_layer(file_name):
+    """
+        this function converts a csv with x and y columns
+        into a QgsLayer
+        Input:
+            file_name: file path of the csv file (str)
+        Output:
+            memory_layer: converterd csv (QgsLayer) 
+    """
+    uri= f'file:///{file_name}?delimiter=,&yField=Latitude&xField=Longitude'
+    settlement_layer = QgsVectorLayer(uri, 'settlement', 'delimitedtext')
+    memory_layer = QgsVectorLayer("Point?crs=EPSG:4326", 'memory_layer', 'memory')
+
+    # Add the same fields to the memory layer
+    memory_layer.dataProvider().addAttributes(settlement_layer.fields())
+    memory_layer.updateFields()
+
+    # Copy features from the delimited text layer to the memory layer
+    memory_layer.startEditing()
+    memory_layer.dataProvider().addFeatures(settlement_layer.getFeatures())
+    memory_layer.commitChanges()
+    return memory_layer
+
+
 def within_ward_boundary(settlement_layer, ward_layer, lga_map, wards_map):
     """
         this function checks which settlments fall outside
@@ -198,7 +222,7 @@ def within_ward_boundary(settlement_layer, ward_layer, lga_map, wards_map):
     return settlement_layer
 
 
-def covert_layer_to_dataframe(layer):
+def convert_layer_to_dataframe(layer):
     """
         This function take a QgsLayer and convert it to a pandas 
         dataframe
