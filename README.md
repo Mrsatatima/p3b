@@ -39,22 +39,34 @@
 
 ## 📍 Overview
 
-A script to clean p3b temaplate and create random location in 8 wards per LGA to be visited at the end of ITN campaign
-
+A module mostly focus on cleaning the p3b template and turn it to a format you can use for various data analysis. It then provides you with tools you can use to:
+- create 8 random settlements google directions links per LGA for post-implementation revisits to confirm the accuracy of distributed ITNs 
+- track and verifying the accuracy of captured points during data collection
+- Matching of settlements from GRID3 database to settlements on the p3b to add location to them
 
 ---
 
 ## 📦 Features
 
-► INSERT-TEXT
+### Cleaning of p3b template
+- The p3b template is an excel file with various merger cell which makes it hard to use it for data analysis see image below
 
+<p align=center>
+<img src= /images/p3b_header/>
+<img src= /images/p3b_cells/>
+</p>
+
+- This modules then unmerges all cells, removes unwanted columns and rows, set the right and populate a ward and DH for each settlement se image below
+<p align=center>
+<img src= /images/p3b_cells_populated/>
+</p>
 ---
 
 
 ## 📂 Repository Structure
 
 ```sh
-└── p3b/
+└── ITN/
     ├── Cluster/
     │   ├── cluster.py
     │   └── main.py
