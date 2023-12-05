@@ -1,8 +1,8 @@
 <div align="center">
 <h1 align="center">
 <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" width="100" />
-<br>P3B</h1>
-<h3>◦ ► INSERT-TEXT</h3>
+<br>ITN</h1>
+<h3> A Python Module for cleaning P3B template, tracking and validating data during data collection and creating random location to revisit after implementation </h3>
 <h3>◦ Developed with the software and tools below.</h3>
 
 <p align="center">
