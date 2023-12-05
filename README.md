@@ -52,13 +52,13 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
 - The p3b template is an excel file with various merger cell which makes it hard to use it for data analysis see image below
 
 <p align=center>
-<img src= "/images/p3b_header"/>
-<img src= "/images/p3b_cells"/>
+<img src= "/images/p3b_header.png"/>
+<img src= "/images/p3b_cells.png"/>
 </p>
 
 - This modules then unmerges all cells, removes unwanted columns and rows, set the right and populate a ward and DH for each settlement se image below
 <p align=center>
-<img src= /images/p3b_cells_populated/>
+<img src= /images/p3b_cells_populated.png/>
 </p>
 ---
 
