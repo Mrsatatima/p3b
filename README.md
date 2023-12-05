@@ -66,9 +66,9 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
 - To do this random locations are selected  form each LGA for visit. Cluster selection (8) from from each LGA is done  using Probability Proportional to Size (PPS)
 - Giving the large number of LGAs it takes time to create this cluster
 - This module provides a tool to create this location and assign a google map direction
-<div align=center padding=auto>
-<p> How it is done manually </p>
-<ol align=left>
+<div>
+<p align=center> How it is done manually </p>
+<ol>
    <li>sort wards by thier population in ascending order</li>
    <li>Create a cumulative frequency</li>
    <li>set PPES interval</li>
