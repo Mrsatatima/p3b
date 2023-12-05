@@ -56,10 +56,35 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
 <img src= "/images/p3b_cells.png"/>
 </p>
 
-- This modules then unmerges all cells, removes unwanted columns and rows, set the right and populate a ward and DH for each settlement se image below
+- This modules then unmerges all cells, removes unwanted columns and rows, set the right and populate a ward and DH for each settlement see image below
 <p align=center>
 <img src= /images/p3b_cells_populated.png/>
 </p>
+
+### Creating 8 random settlement google directions per LGA for post-implementation revisits
+- Normally after every ITN campaign there is a post implementation activity which involves rapid assesment of  ITN distribution campaign to determine ITN coverage, ownership, access, hanging rate etc.
+- To do this random locations are selected  form each LGA for visit. Cluster selection (8) from from each LGA is done  using Probability Proportional to Size (PPS)
+- Giving the large number of LGAs it takes time to create this cluster
+- This module provides a tool to create this location and assign a google map direction
+<div align=center>
+<p> How it is done manually </p>
+<ol>
+   <li>sort wards by thier population in ascending order</li>
+   <li>Create a cumulative frequency</li>
+   <li>set PPES interval</li>
+   <li>set a random starting point</li>
+   <li>create cluster increament the starting point with the interval</li>
+   <li>attach each cluster to the cummulative frequency range they fall in</li>
+   <li>Then manually get a random settlement direction from each cluster</li>
+</ol>
+<img src="/images/random_cluster_1-7.png" />
+<img src="/images/random_cluster_8.png" />
+</div>
+
+
+
+
+
 ---
 
 
