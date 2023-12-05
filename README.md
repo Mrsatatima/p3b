@@ -77,9 +77,12 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
    <li>attach each cluster to the cummulative frequency range they fall in</li>
    <li>Then manually get a random settlement direction from each cluster</li>
 </ol>
-<img src="/images/random_cluster_1-7.png" />
-<img src="/images/random_cluster_8.png" />
+<img src="/images/random_cluster_1-7.png"/>
+<img src="/images/random_cluster_8.png"/>
 </div>
+
+- Below is result created using this code
+<img src="/images/random_cluster_code" align=center/>
 
 
 
