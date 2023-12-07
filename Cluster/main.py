@@ -4,10 +4,23 @@ from p3b import get_sheets, actual_header_row, remove_blank_wards_rows, remove_f
 from Cluster.cluster import *
 from helper import kwara_lga_map, kwara_wards_map
 
-file_name = "2023_Kwara_P3B.xlsx"
-needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2023)"]
-lga_dct = kwara_lga_map
-ward_dct = kwara_wards_map
+file_name = " "  # path to the p3b template
+#  list of columns you only need
+# e.g. ["Wards", "List of contiguous communities/ settlements", "Population\n(2023)"]
+needed_columns = " "
+
+# lga map dict for names of lga in p3b vs names of lga on GRID3
+# can be found on the helper module
+# if not there you need to create yours
+lga_dct = ""
+
+# ward map dict for names of ward in p3b vs names of ward on GRID3
+# can be found on the helper module
+# if not there you need to create yours
+ward_dct = ""
+
+state = ""  # state yo want to attach coordinats to  its p3b settlements
+
 
 
 def main(state):

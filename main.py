@@ -1,6 +1,8 @@
 from p3b import *
 
-file_name = "2023_Kwara_P3B.xlsx"
+file_name = ""  # path of the p3b template
+state = ''  # the state you want to cleand its p3b
+
 
 def main(state):
     """
@@ -31,4 +33,4 @@ def main(state):
 
 
 if __name__ == "__main__":
-    main("Kwara")
+    main(state)

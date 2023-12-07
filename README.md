@@ -67,8 +67,8 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
 - Giving the large number of LGAs it takes time to create this cluster
 - This module provides a tool to create this location and assign a google map direction
 <div>
-<p align=center> How it is done manually </p>
-<ol>
+<p align=center > How it is done manually </p>
+<ol margin-left = 4rem>
    <li>sort wards by thier population in ascending order</li>
    <li>Create a cumulative frequency</li>
    <li>set PPES interval</li>
@@ -82,14 +82,19 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
 </div>
 
 - Below is result created using this code
-<img src="/images/random_cluster_code" align=center/>
+<img src="/images/random_cluster_code.png" align=center/>
 
 
+### Tracking Data collection progess and points accuracy validation
+- This validates the accuray of points collected to confrim they fall in the right location (appropraite ward)
+- It then creates an excel file for those that are wrongly located to be reviewed by people responsible
+- the accurate points are then macthed with the points that are to be captured to ascertain point captured so far and points yet to be captured 
 
-
+### Matching of settlements 
+- this matches settlements on the p3b to settlements on the GRID3 data base
+- this is done so that the settlements on the p3b can have geo-coordinates so that they can be used for spatials analysis
 
 ---
-
 
 ## 📂 Repository Structure
 
@@ -101,10 +106,10 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
     ├── geo_script.py
     ├── helper.py
     ├── main.py
+    ├── images/
     ├── Matching/
     │   ├── main.py
     │   └── matching.py
-    ├── notebook.ipynb
     ├── p3b.py
     ├── requirements.txt
     └── Tracker/

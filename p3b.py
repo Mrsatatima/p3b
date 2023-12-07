@@ -6,6 +6,17 @@ import openpyxl
 
 
 def get_sheet_helper(file_name, sheet):
+    """
+        this is a helper function for get sheets
+        it get sheets of lga of P3b template that
+        did not follow the name format of "number.lga_name 
+        i.e "1.Asa"
+        Input:
+            filename: path to the p3b template (str)
+            sheets: List of all the sheets in the p3b template file (list)
+        Ouput:
+            new_sheets: a list of all valid sheets (sheet of lga only) (list)
+    """
     new_sheet = []
     for s in sheet:
         df = pd.read_excel(file_name, sheet_name=s)
@@ -200,6 +211,14 @@ def write_to_excel(data_frame, file_name, sheet_name):
 
 
 def get_lga_name(sheet):
+    """
+        this cleans sheet name to be just an lga name
+        that can be used is procesiing
+        Input:
+            sheet: Sheet name (str)
+        Output:
+            lga: clean lga name (str)
+    """
     lga_list = sheet.split('.')
     try:
         lga = lga_list[1].strip().lower().title()
