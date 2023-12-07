@@ -1,3 +1,7 @@
+
+# giving the difference in the name of wards and lga between GRID3 data set and p3b tempate
+# This dictionaries were create to fix this issues
+# if the state of interest is not here create one for that state below using this format
 kwara_lga_map = {'asa': 'asa', 'baruten': 'baruten', 'edu': 'edu', 'ekiti': 'ekiti', 'ifelodun': 'ifelodun',
                  'ilorin east': 'ilorin east', 'ilorin south': 'ilorin south', 'ilorin west': 'ilorin west', 
                  'irepodun': 'irepodun', 'isin': 'isin', 'kaiama': 'kaiama', 'moro': 'moro', 'offa': 'offa', 
@@ -231,6 +235,15 @@ kwara_security_challenged ={"Baruten":["Yashikira",'Gure /Giwasorio'],"Edu":["La
                             "Moro":["Babadudu","Bode Saadu","Ejidongari","Jehunkunu","Megida","Shao"]
                             }
 
+# Nigeria wards boundary, lga boundary nad settlement extent from GRID3 data Hub
+# dowload from this links
+# https://data.grid3.org/datasets/GRID3::grid3-nga-operational-wards-v1-0/explore
+# https://data.grid3.org/datasets/GRID3::grid3-nga-operational-lga-v1-0/explore
+# https://data.grid3.org/datasets/GRID3::grid3-nga-settlement-extents-v2-0/explore
+# https://data.grid3.org/datasets/GRID3::grid3-nga-settlement-names/explore?location=9.049179%2C8.686673%2C6.86
+# extract to root directory 
+# if the paths are not thesame you can change it hear
 wards_shapefile ="Nigeria Wards/Nigeria_Wards.shp"
 set_extent_shapefile = "Nigeria_Settlement_Extents_Version_02/nga_stlext_grid3_v02.shp"
 lga_shapefile = "Nigeria_-_Local_Government_Area_Boundaries/Nigeria_-_Local_Government_Area_Boundaries.shp"
+settlement_points = "Nigeria_-_Settlement_Points.csv"

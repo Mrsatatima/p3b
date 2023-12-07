@@ -134,10 +134,10 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
 | [p3b.py](https://github.com/Mrsatatima/p3b/blob/main/p3b.py)                     | ► INSERT-TEXT |
 | [requirements.txt](https://github.com/Mrsatatima/p3b/blob/main/requirements.txt) | ► INSERT-TEXT |
 | [cluster.py](https://github.com/Mrsatatima/p3b/blob/main/Cluster\cluster.py)     | ► INSERT-TEXT |
-| [main.py](https://github.com/Mrsatatima/p3b/blob/main/Cluster\main.py)           | ► INSERT-TEXT |
-| [main.py](https://github.com/Mrsatatima/p3b/blob/main/Matching\main.py)          | ► INSERT-TEXT |
+| [Cluster\main.py](https://github.com/Mrsatatima/p3b/blob/main/Cluster\main.py)           | ► INSERT-TEXT |
+| [Matching\main.py](https://github.com/Mrsatatima/p3b/blob/main/Matching\main.py)          | ► INSERT-TEXT |
 | [matching.py](https://github.com/Mrsatatima/p3b/blob/main/Matching\matching.py)  | ► INSERT-TEXT |
-| [main.py](https://github.com/Mrsatatima/p3b/blob/main/Tracker\main.py)           | ► INSERT-TEXT |
+| [Tracker\main.py](https://github.com/Mrsatatima/p3b/blob/main/Tracker\main.py)           | ► INSERT-TEXT |
 | [tracker.py](https://github.com/Mrsatatima/p3b/blob/main/Tracker\tracker.py)     | ► INSERT-TEXT |
 
 </details>
@@ -150,11 +150,11 @@ A module mostly focus on cleaning the p3b template and turn it to a format you c
 
 Please ensure you have the following dependencies installed on your system:
 
-`- ℹ️ Dependency 1`
+`- ℹ️ Python 3`
 
-`- ℹ️ Dependency 2`
+`- ℹ️ pandas `
 
-`- ℹ️ ...`
+`- ℹ️ qgis `
 
 ### 🔧 Installation
 
@@ -173,12 +173,27 @@ cd p3b
 pip install -r requirements.txt
 ```
 
-### 🤖 Running p3b
+### 🤖 Running ITN
+- first before running the script open helper.py 
+- you need to download the Nigeria settlements points csv, settlement extent shapefile and ward and lga boundary shapile 
+<p align= center>
+<img src ="/images/helper_shapefile.png"/>
+</p>
 
+- use links in the comment to download
+- extract all to root directory
+#### Cleaning of P3b template
+- open main.py in the main directory
+- assign values to the following variables
+<p align= center>
+<img src ="/images/helper_shapefile.png"/>
+</p>
+
+- run the following code 
 ```sh
 python main.py
 ```
-
+- your result can be found in the root directory
 ### 🧪 Tests
 ```sh
 pytest
