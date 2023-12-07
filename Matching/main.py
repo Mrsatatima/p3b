@@ -1,10 +1,10 @@
 from Matching.matching import *
-from p3b import get_sheets, actual_header_row, remove_first_blank_column,get_lga_name, populate_dh, populate_wards, write_to_excel
+from p3b import get_sheets, actual_header_row, remove_first_blank_column, get_lga_name, populate_dh, populate_wards, write_to_excel
 from helper import *
 
 p3b_file = ""  # path to the p3b template
 rr_collect_file = ""  # path to the rr_collect data use for data collection
-grid3_file = ""  # grid3 settlement point data from GRID3 Datahub\\
+grid3_file = ""  # grid3 settlement point data from GRID3 Datahub
 
 # lga map dict for names of lga in p3b vs names of lga on GRID3
 # can be found on the helper module

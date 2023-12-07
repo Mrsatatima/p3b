@@ -7,7 +7,7 @@ from helper import kwara_lga_map, kwara_wards_map
 file_name = " "  # path to the p3b template
 #  list of columns you only need
 # e.g. ["Wards", "List of contiguous communities/ settlements", "Population\n(2023)"]
-needed_columns = " "
+needed_columns = ["Wards", "List of contiguous communities/ settlements", "Population\n(2023)"]
 
 # lga map dict for names of lga in p3b vs names of lga on GRID3
 # can be found on the helper module

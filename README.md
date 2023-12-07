@@ -182,18 +182,55 @@ pip install -r requirements.txt
 
 - use links in the comment to download
 - extract all to root directory
-#### Cleaning of P3b template
+### Cleaning of P3b template
 - open main.py in the main directory
 - assign values to the following variables
 <p align= center>
-<img src ="/images/helper_shapefile.png"/>
+<img src= "/images/p3b_main.png"/>
 </p>
 
 - run the following code 
 ```sh
 python main.py
 ```
-- your result can be found in the root directory
+- your output can be found in the root directory
+### Creating Creating 8 random settlement google directions per LGA for post-implementation revisits
+- open Cluster/main.py 
+- assign values to the following variables
+<p align= center>
+<img src ="/images/cluster_main.png"/>
+</p>
+
+- run the following code 
+```sh
+python -m Cluster.main
+```
+- your output can be found in the root directory
+### Matching of settlements 
+- open Matching/main.py 
+- assign values to the following variables
+<p align= center>
+<img src= "/images/matching_main.png"/>
+</p>
+
+- run the following code 
+```sh
+python -m Matching.main
+```
+- your output can be found in the root directory
+
+### Tracking Data collection progess and points accuracy validation
+- open Tracker/main.py 
+- assign values to the following variables
+<p align= center>
+<img src= "/images/tracker_main.png"/>
+</p>
+
+- run the following code 
+```sh
+python -m Tracker.main
+```
+- your output can be found in the root directory
 ### 🧪 Tests
 ```sh
 pytest
