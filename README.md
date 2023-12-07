@@ -230,21 +230,7 @@ python -m Matching.main
 ```sh
 python -m Tracker.main
 ```
-- your output can be found in the root directory
-### 🧪 Tests
-```sh
-pytest
-```
-
----
-
-
-## 🛣 Project Roadmap
-
-> - [X] `ℹ️  Task 1: Implement X`
-> - [ ] `ℹ️  Task 2: Implement Y`
-> - [ ] `ℹ️ ...`
-
+- your output can be found in the /lga/ directory
 
 ---
 
@@ -296,7 +282,8 @@ This project is protected under the [SELECT-A-LICENSE](https://choosealicense.co
 
 ## 👏 Acknowledgments
 
-- List any resources, contributors, inspiration, etc. here.
+- [GRID3](https://grid3.org/) 
+- [QGIS](https://qgis.org/en/site/)
 
 [**Return**](#Top)
 
