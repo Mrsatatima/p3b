@@ -13,9 +13,9 @@ def write_rrcollect_csv(data_frame, write_csv=False):
         the coordinates field. It creates two csv files one for settlements
         and one for DH
 
-        Args:
+        Input:
                 Dataframe: pandas dataframe of the rr collect data set
-        return:
+        Output:
                 None
 
     """
@@ -82,10 +82,12 @@ def write_grid3_csv(data_frame, state, write_csv=False):
     """
         extracts all settlments points of a state from the GRID3 data sets.
         it arrange the columns in a format suitable for matching process
-        Args:
+        Input:
                 data_frame: pandas dataframe of the GRID3 settlement point
                             data 
                 state: The state you want it settlements to be extracted
+        Output:
+            none
     """
     settlement_data = {"State":[],"LGA":[],"Ward":[], "Name of Settlement":[],
                         "Latitude":[],"Longitude":[],}
@@ -160,17 +162,17 @@ def get_captured_list(df, LGA, lga_dict, captured_list = {}, grid3=False):
         Returns a dictionary of captured settlements in a given Local Government Area
         (LGA) with their corresponding coordinates.
 
-        Args:
-        df (pandas DataFrame): The data containing settlement, LGA, ward, latitude, 
-                                longitude, and, if grid3 is False, altitude and accuracy.
-        LGA (str): The name of the Local Government Area.
-        grid3 (bool, optional): A boolean indicating whether to include altitude and accuracy 
-                                values in the output. Defaults to False. It salso indicates 
-                                whether the file is RR_colect or grid3 dataset
+        Input:
+            df (pandas DataFrame): The data containing settlement, LGA, ward, latitude, 
+                                    longitude, and, if grid3 is False, altitude and accuracy.
+            LGA (str): The name of the Local Government Area.
+            grid3 (bool, optional): A boolean indicating whether to include altitude and accuracy 
+                                    values in the output. Defaults to False. It salso indicates 
+                                    whether the file is RR_colect or grid3 dataset
 
-        Returns:
-        dict: A dictionary where keys are LGAs and values are dictionaries where keys are wards and values are dictionaries
-             where keys are settlements and values are strings of latitude and longitude separated by a '|' character, or, if grid3 is True, separated by '|' and followed by altitude and accuracy separated by '|'.
+        Output:
+            dict: A dictionary where keys are LGAs and values are dictionaries where keys are wards and values are dictionaries
+                 where keys are settlements and values are strings of latitude and longitude separated by a '|' character, or, if grid3 is True, separated by '|' and followed by altitude and accuracy separated by '|'.
 
     """
     
@@ -210,7 +212,7 @@ def matching_same_name(p3b_list, capture_list, perfect_match, LGA, lga_dict, war
         Matches settlements in the P3B list with those in the capture list that have the same name, 
         and returns a dictionary of perfect matches. 
         
-        Args:
+        Input:
             p3b_list (dict): Dictionary of settlements in P3B list.
             capture_list (dict): Dictionary of captured settlements.
             perfect_match (dict): Dictionary of perfect matches.
@@ -218,7 +220,7 @@ def matching_same_name(p3b_list, capture_list, perfect_match, LGA, lga_dict, war
             captured (bool): Whether the capture list is a RR collect or a GRID3 list. 
                 Defaults to True.
         
-        Returns:
+        Output:
             tuple: A tuple containing the updated P3B list, capture list, perfect match dictionary, and count of matches.
     """
     settlement_list = {}
@@ -271,12 +273,12 @@ def match_phrases(phrase1, phrase2, ratio=0.8):
     """
         Compares two phrases and returns whether they are a match based on a similarity ratio.
 
-        Args:
+        Input:
             phrase1 (str): The first phrase to compare.
             phrase2 (str): The second phrase to compare.
             ratio (float, optional): The minimum similarity ratio required to consider the phrases a match. Defaults to 0.8.
 
-        Returns:
+        Output:
             tuple: A tuple containing a boolean indicating whether the phrases are a match, and the similarity ratio between them.
     """
     # If either phrase is empty or only contains whitespace, they cannot be a match
@@ -297,31 +299,31 @@ def similar_name(p3b_list, capture_list, perfect_match, LGA, ratio, lga_dict, wa
     """
         Find similar names between two dictionaries of settlements.
 
-        Parameters:
-        -----------
-        p3b_list : dict
-            A dictionary of settlements with Local Government Areas and wards as keys from P3B.
-        capture_list : dict
-            A dictionary of settlements with Local Government Areas and wards as keys from RR Collect of GRID3.
-        perfect_match : dict
-            A dictionary to store the matching settlements.
-        LGA : str
-            A string that specifies the Local Government Area to match.
-        ratio : float
-            A float between 0 and 1 that specifies the ratio of similarity between the settlement names.
-        captured : bool, optional
-            A boolean value that specifies if the settlement name should be captured or not.
-        dictionary : bool, optional
-            A boolean value that specifies if the common words in the settlement names should be removed.
+        Input:
+        
+            p3b_list : dict
+                A dictionary of settlements with Local Government Areas and wards as keys from P3B.
+            capture_list : dict
+                A dictionary of settlements with Local Government Areas and wards as keys from RR Collect of GRID3.
+            perfect_match : dict
+                A dictionary to store the matching settlements.
+            LGA : str
+                A string that specifies the Local Government Area to match.
+            ratio : float
+                A float between 0 and 1 that specifies the ratio of similarity between the settlement names.
+            captured : bool, optional
+                A boolean value that specifies if the settlement name should be captured or not.
+            dictionary : bool, optional
+                A boolean value that specifies if the common words in the settlement names should be removed.
 
-        Returns:
-        --------
-        tuple
-            A tuple containing four elements:
-            - A dictionary of matching settlements.
-            - A dictionary of settlements with unmatched settlements removed.
-            - The number of settlements removed.
-            - A dictionary of settlements that did not match.
+        Output:
+   
+            tuple
+                A tuple containing four elements:
+                - A dictionary of matching settlements.
+                - A dictionary of settlements with unmatched settlements removed.
+                - The number of settlements removed.
+                - A dictionary of settlements that did not match.
     """
     p3b_list=deepcopy(p3b_list)  # Make a copy of p3b_list to avoid modifying the original
     capture_list=deepcopy(capture_list)  # Make a copy of capture_list to avoid modifying the original
@@ -383,6 +385,7 @@ def similar_name(p3b_list, capture_list, perfect_match, LGA, ratio, lga_dict, wa
                     p3b_list[LGA.lower()][ward].remove(settlement)
     # return the following variables
     return perfect_match, p3b_list, count, capture_list
+
 
 def create_final_data_frame(matched_settlements, unmatched_settlements, grid3=False,field_name="GRID3 Name"):
     """
