@@ -21,9 +21,9 @@ def get_sheet_helper(file_name, sheet):
     for s in sheet:
         df = pd.read_excel(file_name, sheet_name=s)
         cols =df.columns
-        # print(cols)
         for col in cols:
-            if re.match(r'^20[0-9]{2}\s*ITN\s*MASS\s*CAMPAIGN\s*[-]\s*', str(col), re.IGNORECASE):
+            # print(col)
+            if re.match(r'^20[0-9]{2}\s*\b(Integrated)?\b\s*ITN\s*\b(and\s*SMC)?\s*\b\b\s*(mass)?\s*\bCAMPAIGN\s*', str(col), re.IGNORECASE):
                 # print(col)
                 new_sheet.append(s)
                 break
@@ -58,7 +58,7 @@ def actual_header_row(data_frame):
         Output:
         idx: Index of the row of the for the column headers (integer)
     """
-    for idx in range(len(data_frame.iloc[:,1].head(20))):
+    for idx in range(len(data_frame.iloc[:,1].head(30))):
         txt = data_frame.iloc[:,1][idx]
         if re.match(r'((serial)|(s)|(s))\s?/?\s?((number)|(num)|(no)|(n))[.]?',
                     str(txt), re.IGNORECASE):
@@ -171,15 +171,21 @@ def populate_dh(data_frame):
     for idx in range(len(data_frame)):
         if not re.match(r'^nan', str(data_frame['Wards'][idx]), re.IGNORECASE):
             if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
-                if not re.match(r'^nan', str(data_frame['Name of DH'][idx]), re.IGNORECASE):
-                    dh = data_frame['Name of DH'][idx]
+                if not re.match(r'^nan', str(data_frame['Name of DP'][idx]), re.IGNORECASE):
+                    dh = data_frame['Name of DP'][idx]
+                    print(dh)
+
         if not re.match(r'^nan', str(data_frame['List of contiguous communities/ settlements'][idx]), re.IGNORECASE):
             if not re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
                 group.append(idx)
-        if re.match(r'^nan', str(data_frame['List of contiguous communities/ settlements'][idx]), re.IGNORECASE):
+                # if dh == "Pastor Ojo's House, Obasa, Sabo":
+                #     print(idx)
+        if re.match(r'^nan', str(data_frame['List of contiguous communities/ settlements'][idx]), re.IGNORECASE) or re.match(r'^sub\s*total\s*$', str(data_frame['Wards'][idx]), re.IGNORECASE):
+            # print()
+            print(group)
             if dh != "" and len(group) != 0:
                 for i in group:
-                    data_frame.loc[i, ['Name of DH']] = dh
+                    data_frame.loc[i, ['Name of DP']] = dh
                 dh = ""
                 group = []
     return data_frame

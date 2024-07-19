@@ -1,7 +1,7 @@
 from qgis.core import(QgsFeature, QgsVectorLayer,QgsFeatureRequest,
                       QgsFields,QgsApplication,QgsGeometry, QgsField,
                       QgsDistanceArea, QgsUnitTypes, QgsProcessingFeatureSourceDefinition)
-from PyQt5.QtCore import  QVariant
+from PyQt5.QtCore import  QVariant, Qt
 from processing.core.Processing import Processing
 import processing
 import random
@@ -147,7 +147,7 @@ def convert_csv_to_layer(file_name):
         Output:
             memory_layer: converterd csv (QgsLayer) 
     """
-    uri= f'file:///{file_name}?delimiter=,&yField=Latitude&xField=Longitude'
+    uri= f'file:///{file_name}?delimiter=,&yField=End_lat&xField=End_lon'
     settlement_layer = QgsVectorLayer(uri, 'settlement', 'delimitedtext')
     memory_layer = QgsVectorLayer("Point?crs=EPSG:4326", 'memory_layer', 'memory')
 
@@ -185,7 +185,10 @@ def within_ward_boundary(settlement_layer, ward_layer, lga_map, wards_map):
     fields = [
         QgsField('in_Ward', QVariant.String),
         QgsField('dst_km', QVariant.Double),
-        QgsField('GRID3_Wrd', QVariant.String, len=35),
+        QgsField('time_dif', QVariant.Double),
+        QgsField('dst_to_point', QVariant.Double),
+
+        QgsField('Flag', QVariant.String, len=50),
     ]
 
     settlement_layer.startEditing()
@@ -203,14 +206,14 @@ def within_ward_boundary(settlement_layer, ward_layer, lga_map, wards_map):
 
     for settlement in settlement_layer.getFeatures():
         ward_name = settlement['Ward']
-        lga_name = settlement['LGA']
-        expression = f'"lganame" = \'{lga_map[lga_name.lower()].title()}\''
-        GRID3_ward = wards_map[lga_name.lower()][ward_name.lower()]
+        lga_name = str(settlement['LGA']).replace("_", " ")
+        expression = f'"lganame" = \'{lga_name}\''
+        # GRID3_ward = wards_map[lga_name.lower()][ward_name.lower()]
         wards = ward_layer.getFeatures(expression)
         
         ward_geom =None
         for ward in wards:
-            if ward['wardname'].lower() == wards_map[lga_name.lower()][ward_name.lower()]:
+            if str(ward['wardname']).replace("_"," ") == ward_name:
                 ward_geom = ward.geometry()
                 break
         if ward_geom:
@@ -218,15 +221,39 @@ def within_ward_boundary(settlement_layer, ward_layer, lga_map, wards_map):
             if ward_geom.contains(settlement_geom):
                 in_ward = "Yes"
                 dist_to_ward = 0.0
+                flag = str(settlement["Flag"])+''
                 
             else:
                 in_ward = "No"
                 nearest_ward_geom = ward_geom.nearestPoint(settlement_geom)
                 dist_to_ward = dist.measureLine(settlement_geom.asPoint(), nearest_ward_geom.asPoint())/1000
+                flag = str(settlement["Flag"])+' flag1,'
            
             settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('in_Ward'), in_ward)
             settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('dst_km'), dist_to_ward)
-            settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('GRID3_Wrd'), GRID3_ward)
+            settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('Flag'), flag)
+        
+        time_diff =settlement["Start_time"].msecsTo(settlement["End_time"])
+        if time_diff >=10:
+            flag = str(settlement["Flag"])+' flag2,'
+            settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('Flag'), flag)
+        for settlement2 in settlement_layer.getFeatures():
+            set_geom = settlement.geomerty()
+            set_geom2 = settlement2.geomerty()
+            diff = dist.measureLine(set_geom, set_geom2)/1000
+            if diff >= 0.1:break
+        flag = str(settlement["Flag"])+' flag3,'
+        settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('Flag'), flag)
+        settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('dst_to_point'), diff)
+
+        
+
+
+            
+
+        
+
+            # settlement_layer.changeAttributeValue(settlement.id(), settlement_layer.fields().lookupField('GRID3_Wrd'), GRID3_ward)
     settlement_layer.commitChanges()
     return settlement_layer
 
@@ -247,6 +274,11 @@ def convert_layer_to_dataframe(layer):
 
     # Iterate through features and collect attributes
     for feature in layer.getFeatures():
+        for field in feature.fields().names():
+            if field in ["Start_time","End_time"]:
+
+                feature[field] = feature[field].toString(format=Qt.ISODate)
+            # feature[field] = fe
         feature_dict = dict(zip(feature.fields().names(), feature.attributes()))
         features_list.append(feature_dict)
 

@@ -19,63 +19,167 @@ def write_rrcollect_csv(data_frame, write_csv=False):
                 None
 
     """
+    # fields ={
+        # "State":"Please Select the State You are Currently In",
+        # "LGA":"Please Select the LGA You are Currently In",
+        # "Ward":"Please Select the ward",
+        # "Type":"Is your current location a Settlement or a Distribution Hub?",
+        # "Name of Settlement":"Please select the name of the settlement",
+        # "DH":"What Distribution Hub is the settlement Clustered in?",
+        # "Type of DH":"What type of Distribution Hub is this?",
+        # "Others":"If others, please specify:",
+        # "Name of DH":"Please enter the name of the Distribution hub",
+        # "Settlement":"Please select the settlement the Distribution hub is located in",
+        # "Location":"Capture the GPS Coordinate of the Location",
+        # "Date_time":"Form Filling End"
+        # }
     fields ={
-        "State":"Please Select the State You are Currently In",
-        "LGA":"Please Select the LGA You are Currently In",
-        "Ward":"Please Select the ward",
-        "Type":"Is your current location a Settlement or a Distribution Hub?",
-        "Name of Settlement":"Please select the name of the settlement",
-        "DH":"What Distribution Hub is the settlement Clustered in?",
+        "State":"state",
+        'Cluster':'cluster',
+        'Supervisor':"supervisor",
+        "Enumerator":"enumerator",
+        "LGA":"lga",
+        "Ward":"ward",
+        "Type":"datatype",
+        "Name of Settlement":"settlement_label",
+        "ID":"settlement",
+        "hf_ID":"settlement",
+        "poi_ID":"settlement",
+        "HF":"What Distribution Hub is the settlement Clustered in?",
         "Type of DH":"What type of Distribution Hub is this?",
-        "Others":"If others, please specify:",
-        "Name of DH":"Please enter the name of the Distribution hub",
-        "Settlement":"Please select the settlement the Distribution hub is located in",
-        "Location":"Capture the GPS Coordinate of the Location",
-        "Date_time":"Form Filling End"
+        "Others set":"settlement_other",
+        "Others HF": "hf_other",
+        "Name of HF":"hf_name",
+        "POI name": "poi_group-poiname",
+        "Start_lat":"start-geopoint-Latitude",
+        "Start_lon":"start-geopoint-Longitude",
+        "End_lat":"geopoint-Latitude",
+        "End_lon":"geopoint-Longitude",
+        "Start_time":"start",
+        "End_time":"start",
         }
-    settlement_data = {"State":[],"LGA":[],"Ward":[], "Name of Settlement":[],"DH":[],
-                        "Latitude":[],"Longitude":[], "Acurracy":[], "Altitude":[],"Date_time":[]
-                    }
-    DH_data = {"State":[],"LGA":[],"Ward":[], "Settlement":[], "Name of DH":[], "Type of DH":[],
-                        "Latitude":[],"Longitude":[], "Acurracy":[], "Altitude":[],"Date_time":[]
-                    }
+    # settlement_data = {"State":[],"LGA":[],"Ward":[], "Name of Settlement":[],"DH":[],
+                    #     "Latitude":[],"Longitude":[], "Acurracy":[], "Altitude":[],"Date_time":[]
+                    # }
+    settlement_data ={
+        "State":[],
+        'Cluster':[],
+        'Supervisor':[],
+        "Enumerator":[],
+        "LGA":[],
+        "Ward":[],
+        "ID":[],
+        "Name of Settlement":[],
+        "Start_lat":[],
+        "Start_lon":[],
+        "End_lat":[],
+        "End_lon":[],
+        "Start_time":[],
+        "End_time":[],
+        }
+    HF_data = {
+        "State":[],
+        'Cluster':[],
+        'Supervisor':[],
+        "Enumerator":[],
+        "LGA":[],
+        "Ward":[],
+        "Name of Settlement":[],
+        "Name of HF":[],
+        "Start_lat":[],
+        "Start_lon":[],
+        "End_lat":[],
+        "End_lon":[],
+        "Start_time":[],
+        "End_time":[],
+        }
+    POI_data ={
+        "State":[],
+        'Cluster':[],
+        'Supervisor':[],
+        "Enumerator":[],
+        "LGA":[],
+        "Ward":[],
+        "Name of Settlement":[],
+        # "Type":[],
+        "POI name": [],
+        "Start_lat":[],
+        "Start_lon":[],
+        "End_lat":[],
+        "End_lon":[],
+        "Start_time":[],
+        "End_time":[],
+        }
+    # DH_data = {"State":[],"LGA":[],"Ward":[], "Settlement":[], "Name of DH":[], "Type of DH":[],
+                    #     "Latitude":[],"Longitude":[], "Acurracy":[], "Altitude":[],"Date_time":[]
+                    # }
     for idx in range(len(data_frame)):
-        if data_frame[fields["Type"]][idx] == "Distribution Hub":
-            DH_data["State"].append(data_frame[fields["State"]][idx])
-            DH_data["LGA"].append(data_frame[fields["LGA"]][idx])
-            DH_data["Ward"].append(data_frame[fields["Ward"]][idx])
-            DH_data["Settlement"].append(data_frame[fields["Settlement"]][idx])
+        settlement = data_frame[fields["Name of Settlement"]][idx] if str(data_frame[fields["Name of Settlement"]][idx]) not in ["NAN","nan",""," ","0",0,] else data_frame[fields["Others set"]][idx]
 
-            DH_data["Name of DH"].append(data_frame[fields["Name of DH"]][idx])
-            type_of_dh = data_frame[fields["Type of DH"]][idx] if data_frame[fields["Type of DH"]][idx] != "Other" else data_frame[fields["Others"]][idx]
-            DH_data["Type of DH"].append(type_of_dh)
-            DH_data["Acurracy"].append(data_frame[fields["Location"]][idx].split("|")[0])
-            DH_data["Altitude"].append(data_frame[fields["Location"]][idx].split("|")[1])
-            DH_data["Latitude"].append(data_frame[fields["Location"]][idx].split("|")[2])
-            DH_data["Longitude"].append(data_frame[fields["Location"]][idx].split("|")[3])
-            DH_data["Date_time"].append(data_frame[fields["Date_time"]][idx])
+        if data_frame[fields["Type"]][idx] == "poi":
+            POI_data["State"].append(data_frame[fields["State"]][idx])
+            POI_data["Cluster"].append(data_frame[fields["Cluster"]][idx])
+            POI_data["LGA"].append(data_frame[fields["LGA"]][idx])
+            POI_data["Ward"].append(data_frame[fields["Ward"]][idx])
+            POI_data["Enumerator"].append(data_frame[fields["Enumerator"]][idx])
+            POI_data["Supervisor"].append(data_frame[fields["Supervisor"]][idx])
+            POI_data["Name of Settlement"].append(settlement)
+            POI_data["POI name"].append(data_frame[fields["POI name"]][idx])
+            # POI_data["Type"].append(type_of_dh)
+            POI_data["Start_lat"].append(data_frame[fields["Start_lat"]][idx])
+            POI_data["Start_lon"].append(data_frame[fields["Start_lon"]][idx])
+            POI_data["End_lat"].append(data_frame[fields["End_lat"]][idx])
+            POI_data["End_lon"].append(data_frame[fields["End_lon"]][idx])
+            POI_data["End_time"].append(data_frame[fields["End_time"]][idx])
+            POI_data["Start_time"].append(data_frame[fields["Start_time"]][idx])
+        elif data_frame[fields["Type"]][idx] == "health_facility":
+            hf = data_frame[fields["Name of HF"]][idx] if str(data_frame[fields["Name of HF"]][idx]) not in ["NAN","nan",""," ","0",0,] else data_frame[fields["Others HF"]][idx]
+
+            HF_data["State"].append(data_frame[fields["State"]][idx])
+            HF_data["Cluster"].append(data_frame[fields["Cluster"]][idx])
+            HF_data["LGA"].append(data_frame[fields["LGA"]][idx])
+            HF_data["Ward"].append(data_frame[fields["Ward"]][idx])
+            HF_data["Enumerator"].append(data_frame[fields["Enumerator"]][idx])
+            HF_data["Supervisor"].append(data_frame[fields["Supervisor"]][idx])
+            HF_data["Name of Settlement"].append(settlement)
+            HF_data["Name of HF"].append(hf)
+            # HF_data["Type"].append(type_of_dh)
+            HF_data["Start_lat"].append(data_frame[fields["Start_lat"]][idx])
+            HF_data["Start_lon"].append(data_frame[fields["Start_lon"]][idx])
+            HF_data["End_lat"].append(data_frame[fields["End_lat"]][idx])
+            HF_data["End_lon"].append(data_frame[fields["End_lon"]][idx])
+            HF_data["End_time"].append(data_frame[fields["End_time"]][idx])
+            HF_data["Start_time"].append(data_frame[fields["Start_time"]][idx])                            
         else:
             settlement_data["State"].append(data_frame[fields["State"]][idx])
+            settlement_data["Cluster"].append(data_frame[fields["Cluster"]][idx])
+            settlement_data["Supervisor"].append(data_frame[fields["Supervisor"]][idx])
+            settlement_data["Enumerator"].append(data_frame[fields["Enumerator"]][idx])
             settlement_data["LGA"].append(data_frame[fields["LGA"]][idx])
             settlement_data["Ward"].append(data_frame[fields["Ward"]][idx])
-            settlement_data["Name of Settlement"].append(data_frame[fields["Name of Settlement"]][idx])
-            settlement_data["DH"].append(data_frame[fields["DH"]][idx])
-            settlement_data["Acurracy"].append(data_frame[fields["Location"]][idx].split("|")[0])
-            settlement_data["Altitude"].append(data_frame[fields["Location"]][idx].split("|")[1])
-            settlement_data["Latitude"].append(data_frame[fields["Location"]][idx].split("|")[2])
-            settlement_data["Longitude"].append(data_frame[fields["Location"]][idx].split("|")[3])
-            settlement_data["Date_time"].append(data_frame[fields["Date_time"]][idx])
-
+            settlement_data["Name of Settlement"].append(settlement)
+            settlement_data["ID"].append(data_frame[fields["ID"]][idx])
+            settlement_data["Start_lat"].append(data_frame[fields["Start_lat"]][idx])
+            settlement_data["Start_lon"].append(data_frame[fields["Start_lon"]][idx])
+            settlement_data["End_lat"].append(data_frame[fields["End_lat"]][idx])
+            settlement_data["End_lon"].append(data_frame[fields["End_lon"]][idx])
+            settlement_data["End_time"].append(data_frame[fields["End_time"]][idx])
+            settlement_data["Start_time"].append(data_frame[fields["Start_time"]][idx])  
+   
     settlement_dataframe = pd.DataFrame(settlement_data, index=None)
-    dh_dataframe = pd.DataFrame(DH_data, index=None)
+    poi_dataframe = pd.DataFrame(POI_data, index=None)
+    hf_dataframe = pd.DataFrame(HF_data, index=None)
     if write_csv:
-        settlement_file_name = os.getcwd()+"\\"+"Cleaned_adamawa_settlement_capture.csv"
-        dh_file_name = os.getcwd()+"\\"+"Cleaned_adamawa_DH_capture.csv"
+        settlement_file_name = os.getcwd()+"\\"+"Cleaned_settlement_capture.csv"
+        hf_file_name = os.getcwd()+"\\"+"Cleaned_adamawa_hf_capture.csv"
+        poi_file_name = os.getcwd()+"\\"+"Cleaned_adamawa_poi_capture.csv"
         settlement_dataframe.to_csv(settlement_file_name, index=False)
-        dh_dataframe.to_csv(dh_file_name, index=False)
-        return settlement_file_name, dh_file_name
+        hf_dataframe.to_csv(hf_file_name, index=False)
+        poi_dataframe.to_csv(poi_file_name, index=False)
 
-    return settlement_dataframe, dh_dataframe
+        return settlement_file_name, hf_file_name, poi_file_name
+
+    return settlement_dataframe, hf_dataframe, poi_dataframe
 
 
 def write_grid3_csv(data_frame, state, write_csv=False):
